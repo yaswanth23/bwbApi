@@ -16,6 +16,10 @@ const options = {
         url: 'http://localhost:9100/api',
         description: 'url to connect at localhost',
       },
+      {
+        url: 'https://qar5m2k5ra.execute-api.ap-south-1.amazonaws.com/dev',
+        description: 'url to connect at dev',
+      },
     ],
     schemes: ['http', 'https'],
   },
