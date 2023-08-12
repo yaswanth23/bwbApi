@@ -4,7 +4,7 @@ const { PingController } = require('../controllers');
 
 /**
  * @swagger
- * /ping:
+ * /api/ping:
  *   get:
  *     tags:
  *       - Ping
@@ -16,7 +16,7 @@ const { PingController } = require('../controllers');
  *       500:
  *         description: Internal server error
  */
-defaultRouter.get('/ping', PingController.GET_ping);
+defaultRouter.get('/ping', [PingController.GET_ping]);
 
 const init = (app) => {
   app.use('/api', defaultRouter);

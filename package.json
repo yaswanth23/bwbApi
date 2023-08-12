@@ -26,6 +26,7 @@
     "express-mung": "^0.5.1",
     "helmet": "^7.0.0",
     "luxon": "^3.3.0",
+    "mongoose": "^7.4.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.0",
