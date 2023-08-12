@@ -22,6 +22,22 @@ module.exports.pharmacyUserSignUp = async (req, res) => {
   }
 };
 
+module.exports.pharmacyUserLogin = async (req, res) => {
+  try {
+    logger.info('inside pharmacyUserLogin controller');
+    const schemaVerifyData = Joi.object().keys({
+      mobileNumber: Joi.number().required(),
+      password: Joi.string().required(),
+    });
+    const params = await validateSchema(req.body, schemaVerifyData);
+    const authBao = new AuthBao();
+    const result = await authBao.pharmacyUserLogin(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

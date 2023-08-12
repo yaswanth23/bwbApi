@@ -8,4 +8,9 @@ router.post('/pharmacy/user/sign_up', [
   AuthController.pharmacyUserSignUp,
 ]);
 
+router.post('/pharmacy/user/login', [
+  HeaderService.validateApiAuthorization,
+  AuthController.pharmacyUserLogin,
+]);
+
 module.exports = router;
