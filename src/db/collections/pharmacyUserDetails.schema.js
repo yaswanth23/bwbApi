@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
+const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 
 const PharmacyUserDetailsSchema = new mongoose.Schema({
-  pharmacyName: String,
-  pharmacyPhone: Number,
-  pharmacyAddress: String,
-  pharmacyPincode: Number,
-  isActive: Boolean,
-  createdOn: Date,
-  updatedOn: Date,
+  pharmacyName: { type: String, required: true },
+  pharmacyPhone: { type: Number, required: true },
+  pharmacyAddress: { type: String, required: true },
+  pharmacyPincode: { type: Number, required: true },
+  isActive: { type: Boolean, default: true },
+  createdOn: { type: Date, default: istTimestamp },
+  updatedOn: { type: Date, default: istTimestamp },
 });
 
 const pharmacyUserDetails = mongoose.model(

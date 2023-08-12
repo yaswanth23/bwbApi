@@ -1,6 +1,7 @@
 const express = require('express');
 const defaultRouter = express.Router();
 const { PingController } = require('../controllers');
+const authRouter = require('./auth.router');
 
 /**
  * @swagger
@@ -20,6 +21,7 @@ defaultRouter.get('/ping', [PingController.GET_ping]);
 
 const init = (app) => {
   app.use('/api', defaultRouter);
+  app.use('/api/v1', authRouter);
 };
 
 module.exports = init;
