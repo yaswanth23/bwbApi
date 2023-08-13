@@ -82,7 +82,6 @@ class AuthBao extends Base {
         userId: pharmacyUserData[0]._id,
       };
       let userAuthData = await AuthDao.findUserAuthPass(whereObj, session);
-      console.log(userAuthData);
 
       let isMatchFound = verifyPasswordWithSalt(
         params.password,
