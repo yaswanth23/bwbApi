@@ -21,6 +21,22 @@ module.exports.getServiceablePincodes = async (req, res) => {
   }
 };
 
+module.exports.searchPincodes = async (req, res) => {
+  try {
+    logger.info('inside searchPincodes');
+    const { pincode } = req.params;
+    const verifyData = Joi.object({
+      pincode: Joi.number().required(),
+    });
+    const params = await validateSchema({ pincode }, verifyData);
+    const generalBao = new GeneralBao();
+    const result = await generalBao.searchPincodes(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

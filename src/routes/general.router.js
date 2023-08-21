@@ -8,4 +8,9 @@ router.get('/get/pincodes', [
   GeneralController.getServiceablePincodes,
 ]);
 
+router.get('/search/:pincode', [
+  HeaderService.validateApiAuthorization,
+  GeneralController.searchPincodes,
+])
+
 module.exports = router;

@@ -34,6 +34,21 @@ class GeneralBao extends Base {
       throw error;
     }
   }
+
+  async searchPincodes(params) {
+    let txn = await db.sequelize.transaction();
+    logger.info('inside getServiceablePincodes');
+    try {
+      const searchDigit = params.pincode.toString();
+      let data = await GeneralDao.findSearchPincodes(searchDigit, txn);
+      await txn.commit();
+      return data;
+    } catch (error) {
+      logger.error(error);
+      await txn.rollback();
+      throw error;
+    }
+  }
 }
 
 module.exports = GeneralBao;
