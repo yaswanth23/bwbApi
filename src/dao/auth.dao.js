@@ -2,6 +2,8 @@ const {
   PharmacyUserDetails,
   UserAuthPassDetails,
 } = require('../db/collections');
+const db = require('../db');
+const { ServiceablePincodes, LabLocations } = db.GeneralSchema;
 
 module.exports.createPharmacyUser = async (insertObj, session) => {
   try {
@@ -44,5 +46,33 @@ module.exports.findUserAuthPass = async (whereObj, session) => {
     return data;
   } catch (e) {
     throw e;
+  }
+};
+
+module.exports.insertPincode = async (insertObj, txn) => {
+  try {
+    let data = await ServiceablePincodes.create(insertObj, {
+      transaction: txn,
+    });
+    if (data) {
+      data = data.get({ plain: true });
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.insertLabs = async (insertObj, txn) => {
+  try {
+    let data = await LabLocations.create(insertObj, {
+      transaction: txn,
+    });
+    if (data) {
+      data = data.get({ plain: true });
+    }
+    return data;
+  } catch (error) {
+    throw error;
   }
 };

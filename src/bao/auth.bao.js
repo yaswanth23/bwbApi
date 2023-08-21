@@ -8,6 +8,9 @@ const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const error = new Error();
 const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
+const fs = require('fs');
+const db = require('../db');
+const csv = require('csv-parser');
 
 class AuthBao extends Base {
   constructor() {
@@ -94,6 +97,36 @@ class AuthBao extends Base {
         error.code = ERROR_CODES.ERROR_CODE_401;
         throw error;
       }
+
+      // code to insert data into db
+      // const csvFilePath = '/Users/yash/Downloads/nc.csv';
+      // console.log(process.cwd());
+      // fs.createReadStream(csvFilePath)
+      //   .pipe(csv())
+      //   .on('data', async (row) => {
+      //     try {
+      //       let insertObj = {
+      //         city: row.City,
+      //         labName: row['Name of Lab'],
+      //         labAddress: row['Address of Lab'],
+      //         pincode: 111111,
+      //         pointOfContact: row['Point of Contact'],
+      //         phoneNumber: row['Phone Number'],
+      //         labTimings: row['Lab Timings'],
+      //         isActive: 1,
+              
+      //       };
+      //       let txn = await db.sequelize.transaction();
+      //       let d = await AuthDao.insertLabs(insertObj, txn);
+      //       await txn.commit();
+      //       console.log(d);
+      //     } catch (error) {
+      //       console.error('Error during data insertion:', error);
+      //     }
+      //   })
+      //   .on('end', () => {
+      //     console.log('Data insertion complete.');
+      //   });
 
       await session.commitTransaction();
       session.endSession();

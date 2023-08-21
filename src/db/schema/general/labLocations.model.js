@@ -1,28 +1,48 @@
 const { DataTypes } = require('sequelize');
 const schema = '';
-const tableName = `serviceablePincodes`;
+const tableName = `labLocations`;
 const definition = {
-  id: {
+  labId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
-    field: 'id',
     primaryKey: true,
+    field: 'labid',
+  },
+  labName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'labname',
+  },
+  labAddress: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'labaddress',
   },
   city: {
     type: DataTypes.STRING,
     allowNull: false,
     field: 'city',
   },
-  state: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: 'state',
-  },
   pincode: {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'pincode',
+  },
+  pointOfContact: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'pointofcontact',
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'phonenumber',
+  },
+  labTimings: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'labtimings',
   },
   isActive: {
     type: DataTypes.INTEGER,
