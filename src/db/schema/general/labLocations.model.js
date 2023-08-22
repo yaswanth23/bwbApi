@@ -44,6 +44,11 @@ const definition = {
     allowNull: false,
     field: 'labtimings',
   },
+  partnerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'partnerid',
+  },
   isActive: {
     type: DataTypes.INTEGER,
     allowNull: false,
