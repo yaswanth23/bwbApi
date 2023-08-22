@@ -54,6 +54,22 @@ module.exports.getDiagnosticTests = async (req, res) => {
   }
 };
 
+module.exports.searchDiagnosticTest = async (req, res) => {
+  try {
+    logger.info('inside searchDiagnosticTest');
+    const { diagnosticTest } = req.params;
+    const verifyData = Joi.object({
+      diagnosticTest: Joi.string().required(),
+    });
+    const params = await validateSchema({ diagnosticTest }, verifyData);
+    const generalBao = new GeneralBao();
+    const result = await generalBao.searchDiagnosticTest(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Base = require('./base');
 const db = require('../db');
+const { Op, fn, col } = require('sequelize');
 const { GeneralDao } = require('../dao');
 const logger = require('../common/logger')('general-bao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
@@ -73,6 +74,27 @@ class GeneralBao extends Base {
         attributeName: item['diagnosticsTestAttribute.attributeName'],
       }));
 
+      await txn.commit();
+      return data;
+    } catch (error) {
+      logger.error(error);
+      await txn.rollback();
+      throw error;
+    }
+  }
+
+  async searchDiagnosticTest(params) {
+    let txn = await db.sequelize.transaction();
+    logger.info('inside searchDiagnosticTest');
+    try {
+      let whereObj = {
+        attributeId: 2,
+        attributeValue: {
+          [Op.iLike]: fn('lower', col('attributeValue')),
+          [Op.iLike]: `%${params.diagnosticTest.toLowerCase()}%`,
+        },
+      };
+      let data = await GeneralDao.searchDiagnosticTest(whereObj, txn);
       await txn.commit();
       return data;
     } catch (error) {

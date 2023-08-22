@@ -51,11 +51,7 @@ module.exports.findDiagnosticsTestAttributesStore = async (
 ) => {
   try {
     let data = await DiagnosticsTestAttributesStore.findAll({
-      attributes: [
-        'attributeId',
-        'testId',
-        'attributeValue',
-      ],
+      attributes: ['attributeId', 'testId', 'attributeValue'],
       where: whereObj,
       limit: limit,
       offset: offset,
@@ -70,6 +66,20 @@ module.exports.findDiagnosticsTestAttributesStore = async (
           },
         },
       ],
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.searchDiagnosticTest = async (whereObj, txn) => {
+  try {
+    let data = await DiagnosticsTestAttributesStore.findAll({
+      where: whereObj,
+      attributes: ['testId', 'attributeId', 'attributeValue'],
+      raw: true,
+      transaction: txn,
     });
     return data;
   } catch (error) {

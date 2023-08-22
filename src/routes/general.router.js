@@ -18,4 +18,9 @@ router.get('/get/diagnostics', [
   GeneralController.getDiagnosticTests,
 ]);
 
+router.get('/search/diagnostics/:diagnosticTest', [
+  HeaderService.validateApiAuthorization,
+  GeneralController.searchDiagnosticTest,
+]);
+
 module.exports = router;
