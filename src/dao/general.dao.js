@@ -1,6 +1,10 @@
 const db = require('../db');
-const { QueryTypes } = require('sequelize');
-const { ServiceablePincodes, LabLocations } = db.GeneralSchema;
+const { QueryTypes, col, Op, literal } = require('sequelize');
+const {
+  ServiceablePincodes,
+  DiagnosticsTestAttributes,
+  DiagnosticsTestAttributesStore,
+} = db.GeneralSchema;
 
 module.exports.findServiceablePincodes = async (
   whereObj,
@@ -32,6 +36,40 @@ module.exports.findSearchPincodes = async (searchDigit, txn) => {
     const data = await db.sequelize.query(query, {
       type: QueryTypes.SELECT,
       transaction: txn,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.findDiagnosticsTestAttributesStore = async (
+  whereObj,
+  limit,
+  offset,
+  txn
+) => {
+  try {
+    let data = await DiagnosticsTestAttributesStore.findAll({
+      attributes: [
+        'attributeId',
+        'testId',
+        'attributeValue',
+      ],
+      where: whereObj,
+      limit: limit,
+      offset: offset,
+      raw: true,
+      transaction: txn,
+      include: [
+        {
+          model: DiagnosticsTestAttributes,
+          attributes: ['attributeName'],
+          where: {
+            isActive: true,
+          },
+        },
+      ],
     });
     return data;
   } catch (error) {

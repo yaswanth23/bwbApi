@@ -43,5 +43,11 @@ module.exports = (sequelize) => {
     updatedAt: false,
     freezeTableName: true,
   });
+  table.associate = (models) => {
+    table.belongsTo(models.GeneralSchema.DiagnosticsTestAttributesStore, {
+      foreignKey: 'attributeId',
+      targetKey: 'attributeId',
+    });
+  };
   return table;
 };

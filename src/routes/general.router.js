@@ -11,6 +11,11 @@ router.get('/get/pincodes', [
 router.get('/search/:pincode', [
   HeaderService.validateApiAuthorization,
   GeneralController.searchPincodes,
-])
+]);
+
+router.get('/get/diagnostics', [
+  HeaderService.validateApiAuthorization,
+  GeneralController.getDiagnosticTests,
+]);
 
 module.exports = router;

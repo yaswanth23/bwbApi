@@ -49,6 +49,38 @@ class GeneralBao extends Base {
       throw error;
     }
   }
+
+  async getDiagnosticTests(limit, page) {
+    let txn = await db.sequelize.transaction();
+    logger.info('inside getDiagnosticTests');
+    try {
+      let offset = (page - 1) * limit;
+      let whereObj = {
+        attributeId: [2],
+        isActive: true,
+      };
+      let data = await GeneralDao.findDiagnosticsTestAttributesStore(
+        whereObj,
+        limit,
+        offset,
+        txn
+      );
+
+      data = data.map((item) => ({
+        attributeId: item.attributeId,
+        testId: item.testId,
+        attributeValue: item.attributeValue,
+        attributeName: item['diagnosticsTestAttribute.attributeName'],
+      }));
+
+      await txn.commit();
+      return data;
+    } catch (error) {
+      logger.error(error);
+      await txn.rollback();
+      throw error;
+    }
+  }
 }
 
 module.exports = GeneralBao;
