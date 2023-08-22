@@ -49,6 +49,16 @@ const definition = {
     allowNull: false,
     field: 'partnerid',
   },
+  latitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    field: 'latitude',
+  },
+  longitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    field: 'longitude',
+  },
   isActive: {
     type: DataTypes.INTEGER,
     allowNull: false,
