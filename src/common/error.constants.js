@@ -8,5 +8,7 @@ module.exports = {
     ERROR_MESSAGE_USER_ALREADY_EXISTS: 'User already exists!',
     ERROR_MESSAGE_USER_NOT_FOUND: 'User not found',
     ERROR_MESSAGE_INVALID_PASSWORD: 'Invalid password',
+    ERROR_MESSAGE_DIAGNOSTIC_TEST_NOT_FOUND:
+      'The Diagnostic Test details are not found',
   },
 };

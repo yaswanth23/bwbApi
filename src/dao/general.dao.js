@@ -86,3 +86,25 @@ module.exports.searchDiagnosticTest = async (whereObj, txn) => {
     throw error;
   }
 };
+
+module.exports.getDiagnosticTestDetails = async (whereObj, txn) => {
+  try {
+    let data = await DiagnosticsTestAttributesStore.findAll({
+      where: whereObj,
+      include: [
+        {
+          model: DiagnosticsTestAttributes,
+          attributes: ['attributeName'],
+          where: {
+            isActive: true,
+          },
+        },
+      ],
+      raw: true,
+      transaction: txn,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

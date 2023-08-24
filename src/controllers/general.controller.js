@@ -70,6 +70,22 @@ module.exports.searchDiagnosticTest = async (req, res) => {
   }
 };
 
+module.exports.getDiagnosticTestDetails = async (req, res) => {
+  try {
+    logger.info('inside getDiagnosticTestDetails');
+    const { testId } = req.params;
+    const verifyData = Joi.object({
+      testId: Joi.string().required(),
+    });
+    const params = await validateSchema({ testId }, verifyData);
+    const generalBao = new GeneralBao();
+    const result = await generalBao.getDiagnosticTestDetails(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,
