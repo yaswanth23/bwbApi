@@ -53,6 +53,12 @@ class AuthBao extends Base {
       };
       await AuthDao.createUserAuthPass(insertObj, session);
 
+      insertObj = {
+        userId: pharmacyUserData[0]._id,
+        isActive: true,
+      };
+      await AuthDao.createCartDetails(insertObj, session);
+
       await session.commitTransaction();
       session.endSession();
       return {
@@ -85,6 +91,7 @@ class AuthBao extends Base {
         userId: pharmacyUserData[0]._id,
       };
       let userAuthData = await AuthDao.findUserAuthPass(whereObj, session);
+      let cartDetails = await AuthDao.findCartDetails(whereObj, session);
 
       let isMatchFound = verifyPasswordWithSalt(
         params.password,
@@ -97,6 +104,16 @@ class AuthBao extends Base {
         error.code = ERROR_CODES.ERROR_CODE_401;
         throw error;
       }
+
+      let response = {
+        userId: pharmacyUserData[0]._id,
+        cartId: cartDetails[0]._id,
+        pharmacyName: pharmacyUserData[0].pharmacyName,
+        pharmacyPhone: pharmacyUserData[0].pharmacyPhone,
+        pharmacyAddress: pharmacyUserData[0].pharmacyAddress,
+        pharmacyPincode: pharmacyUserData[0].pharmacyPincode,
+        isActive: pharmacyUserData[0].isActive,
+      };
 
       // code to insert data into db
       // const csvFilePath = '/Users/yash/Downloads/nc.csv';
@@ -114,7 +131,7 @@ class AuthBao extends Base {
       //         phoneNumber: row['Phone Number'],
       //         labTimings: row['Lab Timings'],
       //         isActive: 1,
-              
+
       //       };
       //       let txn = await db.sequelize.transaction();
       //       let d = await AuthDao.insertLabs(insertObj, txn);
@@ -130,7 +147,7 @@ class AuthBao extends Base {
 
       await session.commitTransaction();
       session.endSession();
-      return pharmacyUserData[0];
+      return response;
     } catch (e) {
       logger.error(e);
       await session.abortTransaction();
