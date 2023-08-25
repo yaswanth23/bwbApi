@@ -3,7 +3,6 @@ const {
   UserAuthPassDetails,
   CartDetails,
 } = require('../db/collections');
-const db = require('../db');
 
 module.exports.createPharmacyUser = async (insertObj, session) => {
   try {

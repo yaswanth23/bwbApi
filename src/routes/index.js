@@ -4,6 +4,7 @@ const { PingController } = require('../controllers');
 const authRouter = require('./auth.router');
 const generalRouter = require('./general.router');
 const labRouter = require('./lab.router');
+const cartRouter = require('./cart.router');
 
 /**
  * @swagger
@@ -26,6 +27,7 @@ const init = (app) => {
   app.use('/api/v1', authRouter);
   app.use('/api/v1', generalRouter);
   app.use('/api/v1', labRouter);
+  app.use('/api/v1', cartRouter);
 };
 
 module.exports = init;
