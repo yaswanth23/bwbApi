@@ -8,4 +8,9 @@ router.get('/cart/count', [
   CartController.getCartItemsCount,
 ]);
 
+router.post('/cart/add/items', [
+  HeaderService.validateApiAuthorization,
+  CartController.addCartItems,
+]);
+
 module.exports = router;

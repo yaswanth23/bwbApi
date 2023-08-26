@@ -8,3 +8,16 @@ module.exports.findCartDetails = async (whereObj, session) => {
     throw e;
   }
 };
+
+module.exports.updateCartItems = async (updateObj, whereObj, session) => {
+  try {
+    let data = await CartDetails.updateOne(whereObj, updateObj, {
+      session: session,
+      new: true,
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
