@@ -119,6 +119,7 @@ class CartBao extends Base {
       }
 
       let cartItems = [];
+      let totalPrice = 0;
 
       if (cartDetails[0].cartItems.length > 0) {
         await Promise.all(
@@ -131,6 +132,7 @@ class CartBao extends Base {
               item.diagnosticTestId
             );
             finalObj = { ...finalObj, ...diagnosticsTestData };
+            totalPrice += +diagnosticsTestData.mrp
             cartItems.push(finalObj);
           })
         );
@@ -138,7 +140,11 @@ class CartBao extends Base {
 
       await session.commitTransaction();
       session.endSession();
-      return cartItems;
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        cartItems: cartItems,
+        totalPrice: totalPrice,
+      };
     } catch (e) {
       logger.error(e);
       await session.abortTransaction();
