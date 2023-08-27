@@ -18,4 +18,9 @@ router.get('/cart/get/items/:userId/:cartId', [
   CartController.getCartItems,
 ]);
 
+router.post('/cart/remove/items', [
+  HeaderService.validateApiAuthorization,
+  CartController.removeCartItems,
+]);
+
 module.exports = router;

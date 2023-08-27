@@ -132,7 +132,7 @@ class CartBao extends Base {
               item.diagnosticTestId
             );
             finalObj = { ...finalObj, ...diagnosticsTestData };
-            totalPrice += +diagnosticsTestData.mrp
+            totalPrice += +diagnosticsTestData.mrp;
             cartItems.push(finalObj);
           })
         );
@@ -142,6 +142,73 @@ class CartBao extends Base {
       session.endSession();
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
+        cartItems: cartItems,
+        totalPrice: totalPrice,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async removeCartItems(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getCartItems bao', params);
+      session.startTransaction();
+      await session.commitTransaction();
+
+      let whereObj = {
+        _id: params.cartId,
+        userId: params.userId,
+      };
+
+      let cartDetails = await CartDao.findCartDetails(whereObj, session);
+
+      if (!cartDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+
+      let updateObj = {
+        $pull: {
+          cartItems: {
+            _id: params.itemId,
+          },
+        },
+      };
+
+      await CartDao.updateCartItems(updateObj, whereObj, session);
+
+      cartDetails = await CartDao.findCartDetails(whereObj, session);
+
+      let cartItems = [];
+      let totalPrice = 0;
+
+      if (cartDetails[0].cartItems.length > 0) {
+        await Promise.all(
+          cartDetails[0].cartItems.map(async (item) => {
+            let finalObj = {};
+            finalObj.diagnosticTestId = item.diagnosticTestId;
+            finalObj.itemId = item._id;
+            finalObj.pincode = item.pincode;
+            let diagnosticsTestData = await CartHelper.getDiagnosticTestDetails(
+              item.diagnosticTestId
+            );
+            finalObj = { ...finalObj, ...diagnosticsTestData };
+            totalPrice += +diagnosticsTestData.mrp;
+            cartItems.push(finalObj);
+          })
+        );
+      }
+
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        successMessage: 'Item removed successfully',
         cartItems: cartItems,
         totalPrice: totalPrice,
       };
