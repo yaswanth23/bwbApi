@@ -69,8 +69,16 @@ class CartBao extends Base {
         throw error;
       }
 
+      const existingCartItems = new Set(
+        cartDetails[0].cartItems.map((item) => item.diagnosticTestId)
+      );
+
+      const newCartItems = params.cartItems.filter(
+        (item) => !existingCartItems.has(item.diagnosticTestId)
+      );
+
       let updateObj = {
-        cartItems: params.cartItems,
+        cartItems: [...cartDetails[0].cartItems, ...newCartItems],
         updatedOn: istTimestamp,
       };
 
