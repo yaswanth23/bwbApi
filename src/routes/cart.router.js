@@ -13,4 +13,9 @@ router.post('/cart/add/items', [
   CartController.addCartItems,
 ]);
 
+router.get('/cart/get/items/:userId/:cartId', [
+  HeaderService.validateApiAuthorization,
+  CartController.getCartItems,
+]);
+
 module.exports = router;

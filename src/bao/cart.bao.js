@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const Base = require('./base');
 const logger = require('../common/logger')('cart-bao');
-const { AuthDao, CartDao } = require('../dao');
+const { AuthDao, CartDao, GeneralDao } = require('../dao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
+const CartHelper = require('../common/cartHelper');
 const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 const error = new Error();
 
@@ -90,6 +91,54 @@ class CartBao extends Base {
         successCode: STATUS_CODES.STATUS_CODE_200,
         successMessage: 'Items added to the cart successfully',
       };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async getCartItems(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getCartItems bao', params);
+      session.startTransaction();
+
+      let whereObj = {
+        _id: params.cartId,
+        userId: params.userId,
+      };
+
+      let cartDetails = await CartDao.findCartDetails(whereObj, session);
+
+      if (!cartDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+
+      let cartItems = [];
+
+      if (cartDetails[0].cartItems.length > 0) {
+        await Promise.all(
+          cartDetails[0].cartItems.map(async (item) => {
+            let finalObj = {};
+            finalObj.diagnosticTestId = item.diagnosticTestId;
+            finalObj.itemId = item._id;
+            finalObj.pincode = item.pincode;
+            let diagnosticsTestData = await CartHelper.getDiagnosticTestDetails(
+              item.diagnosticTestId
+            );
+            finalObj = { ...finalObj, ...diagnosticsTestData };
+            cartItems.push(finalObj);
+          })
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+      return cartItems;
     } catch (e) {
       logger.error(e);
       await session.abortTransaction();

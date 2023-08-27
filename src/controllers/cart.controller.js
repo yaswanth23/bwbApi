@@ -37,6 +37,23 @@ module.exports.addCartItems = async (req, res) => {
   }
 };
 
+module.exports.getCartItems = async (req, res) => {
+  try {
+    logger.info('inside getCartItems controller');
+    const { userId, cartId } = req.params;
+    const verifyData = Joi.object({
+      userId: Joi.string().required(),
+      cartId: Joi.string().required(),
+    });
+    const params = await validateSchema({ userId, cartId }, verifyData);
+    const cartBao = new CartBao();
+    const result = await cartBao.getCartItems(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,
