@@ -80,6 +80,7 @@ class CartBao extends Base {
 
       let updateObj = {
         cartItems: [...cartDetails[0].cartItems, ...newCartItems],
+        selectedPincode: params.selectedPincode,
         updatedOn: istTimestamp,
       };
 

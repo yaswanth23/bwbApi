@@ -27,6 +27,7 @@ module.exports.addCartItems = async (req, res) => {
       userId: Joi.string().required(),
       cartId: Joi.string().required(),
       cartItems: Joi.array().required(),
+      selectedPincode: Joi.number().required(),
     });
     const params = await validateSchema(req.body, schemaVerifyData);
     const cartBao = new CartBao();

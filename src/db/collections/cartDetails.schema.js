@@ -12,6 +12,7 @@ const cartItemSchema = new mongoose.Schema({
 const cartDetailsSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   cartItems: [cartItemSchema],
+  selectedPincode: { type: Number, default: null },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: istTimestamp },
   updatedOn: { type: Date, default: istTimestamp },
