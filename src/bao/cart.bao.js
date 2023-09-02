@@ -71,11 +71,11 @@ class CartBao extends Base {
       }
 
       const existingCartItems = new Set(
-        cartDetails[0].cartItems.map((item) => item.diagnosticTestId)
+        cartDetails[0].cartItems.map((item) => item.testId)
       );
 
       const newCartItems = params.cartItems.filter(
-        (item) => !existingCartItems.has(item.diagnosticTestId)
+        (item) => !existingCartItems.has(item.testId)
       );
 
       let updateObj = {
@@ -125,11 +125,10 @@ class CartBao extends Base {
         await Promise.all(
           cartDetails[0].cartItems.map(async (item) => {
             let finalObj = {};
-            finalObj.diagnosticTestId = item.diagnosticTestId;
+            finalObj.diagnosticTestId = item.testId;
             finalObj.itemId = item._id;
-            finalObj.pincode = item.pincode;
             let diagnosticsTestData = await CartHelper.getDiagnosticTestDetails(
-              item.diagnosticTestId
+              item.testId
             );
             finalObj = { ...finalObj, ...diagnosticsTestData };
             totalPrice += +diagnosticsTestData.mrp;
@@ -192,11 +191,10 @@ class CartBao extends Base {
         await Promise.all(
           cartDetails[0].cartItems.map(async (item) => {
             let finalObj = {};
-            finalObj.diagnosticTestId = item.diagnosticTestId;
+            finalObj.diagnosticTestId = item.testId;
             finalObj.itemId = item._id;
-            finalObj.pincode = item.pincode;
             let diagnosticsTestData = await CartHelper.getDiagnosticTestDetails(
-              item.diagnosticTestId
+              item.testId
             );
             finalObj = { ...finalObj, ...diagnosticsTestData };
             totalPrice += +diagnosticsTestData.mrp;
