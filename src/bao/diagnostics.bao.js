@@ -53,6 +53,79 @@ class DiagnosticsBao extends Base {
       throw e;
     }
   }
+
+  async getDiagnosticBookings(params, limit, page) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getDiagnosticBookings bao', params);
+      session.startTransaction();
+
+      let offset = (page - 1) * limit;
+      let whereObj = {
+        userId: params.userId,
+      };
+
+      let diagnosticBookings = await DiagnosticsDao.getDiagnosticBookings(
+        whereObj,
+        limit,
+        offset,
+        session
+      );
+
+      let totalBookingCount = await DiagnosticsDao.getDiagnosticBookingsCount(
+        whereObj,
+        session
+      );
+
+      let totalPages = totalBookingCount / limit;
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        diagnosticBookings: diagnosticBookings,
+        metaData: {
+          totalBookingCount: totalBookingCount,
+          totalPages: totalPages ? Math.ceil(totalPages) : 1,
+        },
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async getDiagnosticBookingDetails(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getDiagnosticBookingDetails bao', params);
+      session.startTransaction();
+
+      let whereObj = {
+        _id: params.bookingId,
+        userId: params.userId,
+      };
+
+      let bookingDetails = await DiagnosticsDao.findDiagnosticBookingDetails(
+        whereObj,
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        bookingDetails: bookingDetails,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 module.exports = DiagnosticsBao;

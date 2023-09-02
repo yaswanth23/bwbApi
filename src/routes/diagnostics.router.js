@@ -8,4 +8,14 @@ router.post('/booking/diagnostics', [
   DiagnosticsController.bookDiagnostics,
 ]);
 
+router.get('/get/diagnostics/bookings', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.getDiagnosticBookings,
+]);
+
+router.get('/details/diagnostics/bookings/:userId/:bookingId', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.getDiagnosticBookingDetails,
+]);
+
 module.exports = router;
