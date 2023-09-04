@@ -123,6 +123,7 @@ class CartBao extends Base {
       let cartItems = [];
       let totalPrice = 0;
       let timeSlots = [];
+      let commonTimeSlots = [];
 
       if (cartDetails[0].cartItems.length > 0) {
         await Promise.all(
@@ -147,42 +148,13 @@ class CartBao extends Base {
             timeSlots.push(timeSlotResponse);
           })
         );
-      }
 
-      let commonAvailableDates = await this.getCommonAvailableDates(timeSlots);
-
-      const commonTimeSlots = [];
-      const uniqueDatesSet = new Set();
-      if (commonAvailableDates.length > 0) {
-        for (const item of timeSlots) {
-          const { testId, availableTimeSlots } = item;
-          for (const slot of availableTimeSlots) {
-            const { dateLabel, date, timeSlots } = slot;
-            if (commonAvailableDates.includes(date)) {
-              if (!uniqueDatesSet.has(date)) {
-                uniqueDatesSet.add(date);
-                commonTimeSlots.push({
-                  dateLabel,
-                  date,
-                  timeSlots: timeSlots,
-                });
-              }
-            }
-          }
-        }
-      } else {
-        let similarTimeSlotTestIds = await this.separateTestIdsWithCommonDates(
+        let commonAvailableDates = await this.getCommonAvailableDates(
           timeSlots
         );
-        console.log(similarTimeSlotTestIds);
-        if (similarTimeSlotTestIds.length > 0) {
-          let similarTestIds = similarTimeSlotTestIds[0].testIds;
 
-          commonAvailableDates = [];
-          similarTimeSlotTestIds.forEach((item) => {
-            commonAvailableDates.push(item.date);
-          });
-
+        const uniqueDatesSet = new Set();
+        if (commonAvailableDates.length > 0) {
           for (const item of timeSlots) {
             const { testId, availableTimeSlots } = item;
             for (const slot of availableTimeSlots) {
@@ -199,24 +171,53 @@ class CartBao extends Base {
               }
             }
           }
+        } else {
+          let similarTimeSlotTestIds =
+            await this.separateTestIdsWithCommonDates(timeSlots);
+          console.log(similarTimeSlotTestIds);
+          if (similarTimeSlotTestIds.length > 0) {
+            let similarTestIds = similarTimeSlotTestIds[0].testIds;
 
-          cartItems = cartItems.map((item) => {
-            if (!similarTestIds.includes(item.diagnosticTestId)) {
+            commonAvailableDates = [];
+            similarTimeSlotTestIds.forEach((item) => {
+              commonAvailableDates.push(item.date);
+            });
+
+            for (const item of timeSlots) {
+              const { testId, availableTimeSlots } = item;
+              for (const slot of availableTimeSlots) {
+                const { dateLabel, date, timeSlots } = slot;
+                if (commonAvailableDates.includes(date)) {
+                  if (!uniqueDatesSet.has(date)) {
+                    uniqueDatesSet.add(date);
+                    commonTimeSlots.push({
+                      dateLabel,
+                      date,
+                      timeSlots: timeSlots,
+                    });
+                  }
+                }
+              }
+            }
+
+            cartItems = cartItems.map((item) => {
+              if (!similarTestIds.includes(item.diagnosticTestId)) {
+                return {
+                  ...item,
+                  disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
+                };
+              } else {
+                return item;
+              }
+            });
+          } else {
+            cartItems = cartItems.map((item) => {
               return {
                 ...item,
                 disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
               };
-            } else {
-              return item;
-            }
-          });
-        } else {
-          cartItems = cartItems.map((item) => {
-            return {
-              ...item,
-              disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
-            };
-          });
+            });
+          }
         }
       }
 
@@ -271,6 +272,7 @@ class CartBao extends Base {
       let cartItems = [];
       let totalPrice = 0;
       let timeSlots = [];
+      let commonTimeSlots = [];
 
       if (cartDetails[0].cartItems.length > 0) {
         await Promise.all(
@@ -295,67 +297,67 @@ class CartBao extends Base {
             timeSlots.push(timeSlotResponse);
           })
         );
-      }
 
-      let commonAvailableDates = await this.getCommonAvailableDates(timeSlots);
-
-      const commonTimeSlots = [];
-      const uniqueDatesSet = new Set();
-      if (commonAvailableDates.length > 0) {
-        for (const item of timeSlots) {
-          const { testId, availableTimeSlots } = item;
-          for (const slot of availableTimeSlots) {
-            const { dateLabel, date, timeSlots } = slot;
-            if (commonAvailableDates.includes(date)) {
-              if (!uniqueDatesSet.has(date)) {
-                uniqueDatesSet.add(date);
-                commonTimeSlots.push({
-                  dateLabel,
-                  date,
-                  timeSlots: timeSlots,
-                });
-              }
-            }
-          }
-        }
-      } else {
-        let similarTimeSlotTestIds = await this.separateTestIdsWithCommonDates(
+        let commonAvailableDates = await this.getCommonAvailableDates(
           timeSlots
         );
-        let similarTestIds = similarTimeSlotTestIds[0].testIds;
 
-        commonAvailableDates = [];
-        similarTimeSlotTestIds.forEach((item) => {
-          commonAvailableDates.push(item.date);
-        });
-
-        for (const item of timeSlots) {
-          const { testId, availableTimeSlots } = item;
-          for (const slot of availableTimeSlots) {
-            const { dateLabel, date, timeSlots } = slot;
-            if (commonAvailableDates.includes(date)) {
-              if (!uniqueDatesSet.has(date)) {
-                uniqueDatesSet.add(date);
-                commonTimeSlots.push({
-                  dateLabel,
-                  date,
-                  timeSlots: timeSlots,
-                });
+        const uniqueDatesSet = new Set();
+        if (commonAvailableDates.length > 0) {
+          for (const item of timeSlots) {
+            const { testId, availableTimeSlots } = item;
+            for (const slot of availableTimeSlots) {
+              const { dateLabel, date, timeSlots } = slot;
+              if (commonAvailableDates.includes(date)) {
+                if (!uniqueDatesSet.has(date)) {
+                  uniqueDatesSet.add(date);
+                  commonTimeSlots.push({
+                    dateLabel,
+                    date,
+                    timeSlots: timeSlots,
+                  });
+                }
               }
             }
           }
-        }
+        } else {
+          let similarTimeSlotTestIds =
+            await this.separateTestIdsWithCommonDates(timeSlots);
+          let similarTestIds = similarTimeSlotTestIds[0].testIds;
 
-        cartItems = cartItems.map((item) => {
-          if (!similarTestIds.includes(item.diagnosticTestId)) {
-            return {
-              ...item,
-              disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
-            };
-          } else {
-            return item;
+          commonAvailableDates = [];
+          similarTimeSlotTestIds.forEach((item) => {
+            commonAvailableDates.push(item.date);
+          });
+
+          for (const item of timeSlots) {
+            const { testId, availableTimeSlots } = item;
+            for (const slot of availableTimeSlots) {
+              const { dateLabel, date, timeSlots } = slot;
+              if (commonAvailableDates.includes(date)) {
+                if (!uniqueDatesSet.has(date)) {
+                  uniqueDatesSet.add(date);
+                  commonTimeSlots.push({
+                    dateLabel,
+                    date,
+                    timeSlots: timeSlots,
+                  });
+                }
+              }
+            }
           }
-        });
+
+          cartItems = cartItems.map((item) => {
+            if (!similarTestIds.includes(item.diagnosticTestId)) {
+              return {
+                ...item,
+                disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
+              };
+            } else {
+              return item;
+            }
+          });
+        }
       }
 
       session.endSession();
