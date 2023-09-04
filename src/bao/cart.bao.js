@@ -174,40 +174,50 @@ class CartBao extends Base {
         let similarTimeSlotTestIds = await this.separateTestIdsWithCommonDates(
           timeSlots
         );
-        let similarTestIds = similarTimeSlotTestIds[0].testIds;
+        console.log(similarTimeSlotTestIds);
+        if (similarTimeSlotTestIds.length > 0) {
+          let similarTestIds = similarTimeSlotTestIds[0].testIds;
 
-        commonAvailableDates = [];
-        similarTimeSlotTestIds.forEach((item) => {
-          commonAvailableDates.push(item.date);
-        });
+          commonAvailableDates = [];
+          similarTimeSlotTestIds.forEach((item) => {
+            commonAvailableDates.push(item.date);
+          });
 
-        for (const item of timeSlots) {
-          const { testId, availableTimeSlots } = item;
-          for (const slot of availableTimeSlots) {
-            const { dateLabel, date, timeSlots } = slot;
-            if (commonAvailableDates.includes(date)) {
-              if (!uniqueDatesSet.has(date)) {
-                uniqueDatesSet.add(date);
-                commonTimeSlots.push({
-                  dateLabel,
-                  date,
-                  timeSlots: timeSlots,
-                });
+          for (const item of timeSlots) {
+            const { testId, availableTimeSlots } = item;
+            for (const slot of availableTimeSlots) {
+              const { dateLabel, date, timeSlots } = slot;
+              if (commonAvailableDates.includes(date)) {
+                if (!uniqueDatesSet.has(date)) {
+                  uniqueDatesSet.add(date);
+                  commonTimeSlots.push({
+                    dateLabel,
+                    date,
+                    timeSlots: timeSlots,
+                  });
+                }
               }
             }
           }
-        }
 
-        cartItems = cartItems.map((item) => {
-          if (!similarTestIds.includes(item.diagnosticTestId)) {
+          cartItems = cartItems.map((item) => {
+            if (!similarTestIds.includes(item.diagnosticTestId)) {
+              return {
+                ...item,
+                disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
+              };
+            } else {
+              return item;
+            }
+          });
+        } else {
+          cartItems = cartItems.map((item) => {
             return {
               ...item,
               disclaimer: `Note: this test will be automatically picked on ${item.schedule}`,
             };
-          } else {
-            return item;
-          }
-        });
+          });
+        }
       }
 
       await session.commitTransaction();
