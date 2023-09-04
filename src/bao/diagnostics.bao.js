@@ -38,13 +38,17 @@ class DiagnosticsBao extends Base {
 
       await CartDao.updateCartItems(updateObj, whereObj, session);
 
-      await DiagnosticsDao.createDiagnosticBookings(params, session);
+      let bookingData = await DiagnosticsDao.createDiagnosticBookings(
+        params,
+        session
+      );
 
       await session.commitTransaction();
       session.endSession();
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
         successMessage: 'Booking confirmed!',
+        bookingData: bookingData,
       };
     } catch (e) {
       logger.error(e);
