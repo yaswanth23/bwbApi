@@ -1,4 +1,4 @@
-const { DiagnosticBookings } = require('../db/collections');
+const { DiagnosticBookings, PatientDetails } = require('../db/collections');
 
 module.exports.createDiagnosticBookings = async (insertObj, session) => {
   try {
@@ -51,5 +51,38 @@ module.exports.findDiagnosticBookingDetails = async (whereObj, session) => {
     return data;
   } catch (e) {
     throw e;
+  }
+};
+
+module.exports.createPatientDetails = async (insertObj, session) => {
+  try {
+    let data = await PatientDetails.create([insertObj], {
+      session: session,
+    });
+    return data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+module.exports.findPatientDetails = async (whereObj, session) => {
+  try {
+    let data = await PatientDetails.find(whereObj).session(session).lean(true);
+    return data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+module.exports.updatePatientDetails = async (updateObj, whereObj, session) => {
+  try {
+    let data = await PatientDetails.updateOne(whereObj, updateObj, {
+      session: session,
+      new: true,
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
   }
 };

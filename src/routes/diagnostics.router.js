@@ -18,4 +18,9 @@ router.get('/details/diagnostics/bookings/:userId/:bookingId', [
   DiagnosticsController.getDiagnosticBookingDetails,
 ]);
 
+router.get('/patient/details/:mobileNumber', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.getPatientDetails,
+]);
+
 module.exports = router;

@@ -65,6 +65,22 @@ module.exports.getDiagnosticBookingDetails = async (req, res) => {
   }
 };
 
+module.exports.getPatientDetails = async (req, res) => {
+  try {
+    logger.info('inside getPatientDetails controller');
+    const { mobileNumber } = req.params;
+    const verifyData = Joi.object({
+      mobileNumber: Joi.number().required(),
+    });
+    const params = await validateSchema({ mobileNumber }, verifyData);
+    const diagnosticsBao = new DiagnosticsBao();
+    const result = await diagnosticsBao.getPatientDetails(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

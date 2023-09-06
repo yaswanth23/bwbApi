@@ -38,6 +38,32 @@ class DiagnosticsBao extends Base {
 
       await CartDao.updateCartItems(updateObj, whereObj, session);
 
+      whereObj = {
+        mobileNumber: params.mobileNumber,
+      };
+
+      let patientDetails = await DiagnosticsDao.findPatientDetails(
+        whereObj,
+        session
+      );
+
+      if (patientDetails.length > 0) {
+        updateObj = {
+          patientDetails: params.patientDetails,
+        };
+
+        await DiagnosticsDao.updatePatientDetails(updateObj, whereObj, session);
+      } else {
+        let insertObj = {
+          patientDetails: params.patientDetails,
+          addressDetails: [],
+          mobileNumber: params.mobileNumber,
+          isActive: true,
+        };
+
+        await DiagnosticsDao.createPatientDetails(insertObj, session);
+      }
+
       params.status = 'pending';
       let bookingData = await DiagnosticsDao.createDiagnosticBookings(
         params,
@@ -123,6 +149,35 @@ class DiagnosticsBao extends Base {
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
         bookingDetails: bookingDetails,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async getPatientDetails(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getPatientDetails bao', params);
+      session.startTransaction();
+
+      let whereObj = {
+        mobileNumber: params.mobileNumber,
+      };
+
+      let patientDetails = await DiagnosticsDao.findPatientDetails(
+        whereObj,
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        patientDetails: patientDetails,
       };
     } catch (e) {
       logger.error(e);
