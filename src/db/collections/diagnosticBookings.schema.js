@@ -11,6 +11,7 @@ const diagnosticBookingSchema = new mongoose.Schema({
   mobileNumber: { type: Number, required: true },
   pincode: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
+  status: { type: String, required: true },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: istTimestamp },
   updatedOn: { type: Date, default: istTimestamp },

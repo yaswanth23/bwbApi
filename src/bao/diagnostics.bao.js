@@ -38,6 +38,7 @@ class DiagnosticsBao extends Base {
 
       await CartDao.updateCartItems(updateObj, whereObj, session);
 
+      params.status = 'pending';
       let bookingData = await DiagnosticsDao.createDiagnosticBookings(
         params,
         session
