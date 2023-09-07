@@ -177,7 +177,7 @@ class DiagnosticsBao extends Base {
       session.endSession();
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
-        patientDetails: patientDetails,
+        patientDetails: patientDetails.length > 0 ? patientDetails[0] : [],
       };
     } catch (e) {
       logger.error(e);
