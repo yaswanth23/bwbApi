@@ -12,9 +12,12 @@ module.exports.bookDiagnostics = async (req, res) => {
       cartId: Joi.string().required(),
       cartItems: Joi.array().required(),
       patientDetails: Joi.array().required(),
-      address: Joi.string().required(),
+      address: Joi.array().required(),
       mobileNumber: Joi.number().required(),
       pincode: Joi.number().required(),
+      timeSlot: Joi.string(),
+      dateLabel: Joi.string(),
+      collectionDate: Joi.string(),
       totalPrice: Joi.number().required(),
     });
     const params = await validateSchema(req.body, schemaVerifyData);
