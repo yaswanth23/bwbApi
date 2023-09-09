@@ -3,6 +3,8 @@ const UserAuthPassDetails = require('./userAuthPassDetails.schema');
 const CartDetails = require('./cartDetails.schema');
 const DiagnosticBookings = require('./diagnosticBookings.schema');
 const PatientDetails = require('./patientDetails.schema');
+const AdminUserRoles = require('./adminUserRoles.schema');
+const AdminUserDetails = require('./adminUserDetails.schema');
 
 module.exports = {
   PharmacyUserDetails,
@@ -10,4 +12,6 @@ module.exports = {
   CartDetails,
   DiagnosticBookings,
   PatientDetails,
+  AdminUserRoles,
+  AdminUserDetails,
 };

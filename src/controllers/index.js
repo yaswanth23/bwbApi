@@ -4,6 +4,7 @@ const GeneralController = require('./general.controller');
 const LabController = require('./lab.controller');
 const CartController = require('./cart.controller');
 const DiagnosticsController = require('./diagnostics.controller');
+const AdminController = require('./admin.controller');
 
 module.exports = {
   PingController,
@@ -12,4 +13,5 @@ module.exports = {
   LabController,
   CartController,
   DiagnosticsController,
+  AdminController,
 };

@@ -3,6 +3,7 @@ const GeneralDao = require('./general.dao');
 const LabDao = require('./lab.dao');
 const CartDao = require('./cart.dao');
 const DiagnosticsDao = require('./diagnostics.dao');
+const AdminDao = require('./admin.dao');
 
 module.exports = {
   AuthDao,
@@ -10,4 +11,5 @@ module.exports = {
   LabDao,
   CartDao,
   DiagnosticsDao,
+  AdminDao,
 };

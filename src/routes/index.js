@@ -6,6 +6,7 @@ const generalRouter = require('./general.router');
 const labRouter = require('./lab.router');
 const cartRouter = require('./cart.router');
 const diagnosticsRouter = require('./diagnostics.router');
+const adminRouter = require('./admin.router');
 
 /**
  * @swagger
@@ -30,6 +31,7 @@ const init = (app) => {
   app.use('/api/v1', labRouter);
   app.use('/api/v1', cartRouter);
   app.use('/api/v1', diagnosticsRouter);
+  app.use('/api/v1', adminRouter);
 };
 
 module.exports = init;
