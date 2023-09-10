@@ -84,6 +84,28 @@ module.exports.getPatientDetails = async (req, res) => {
   }
 };
 
+module.exports.getPartnerDiagnosticBookings = async (req, res) => {
+  try {
+    logger.info('inside getPartnerDiagnosticBookings controller');
+    const schemaVerifyData = Joi.object().keys({
+      userId: Joi.string().required(),
+      page: Joi.number().optional(),
+      limit: Joi.number().optional(),
+    });
+    const params = await validateSchema(req.query, schemaVerifyData);
+    const { limit = 10, page = 1 } = req.query;
+    const diagnosticsBao = new DiagnosticsBao();
+    const result = await diagnosticsBao.getPartnerDiagnosticBookings(
+      params,
+      limit,
+      page
+    );
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

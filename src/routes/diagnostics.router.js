@@ -23,4 +23,9 @@ router.get('/patient/details/:mobileNumber', [
   DiagnosticsController.getPatientDetails,
 ]);
 
+router.get('/get/partner/diagnostics/bookings', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.getPartnerDiagnosticBookings,
+]);
+
 module.exports = router;

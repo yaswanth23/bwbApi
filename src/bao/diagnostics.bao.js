@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const Base = require('./base');
 const logger = require('../common/logger')('diagnostics-bao');
-const { CartDao, DiagnosticsDao } = require('../dao');
+const { CartDao, DiagnosticsDao, AdminDao } = require('../dao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
@@ -178,6 +178,60 @@ class DiagnosticsBao extends Base {
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
         patientInfo: patientDetails.length > 0 ? patientDetails[0] : [],
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async getPartnerDiagnosticBookings(params, limit, page) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getPartnerDiagnosticBookings bao', params);
+      session.startTransaction();
+
+      let offset = (page - 1) * limit;
+      let whereObj = {
+        _id: params.userId,
+      };
+
+      let adminUserDetails = await AdminDao.findAdminUserDetails(
+        whereObj,
+        session
+      );
+
+      if (!adminUserDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+      whereObj = {};
+      let diagnosticBookings = await DiagnosticsDao.getDiagnosticBookings(
+        whereObj,
+        limit,
+        offset,
+        session
+      );
+
+      let totalBookingCount = await DiagnosticsDao.getDiagnosticBookingsCount(
+        whereObj,
+        session
+      );
+
+      let totalPages = totalBookingCount / limit;
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        diagnosticBookings: diagnosticBookings,
+        metaData: {
+          totalBookingCount: totalBookingCount,
+          totalPages: totalPages ? Math.ceil(totalPages) : 1,
+        },
       };
     } catch (e) {
       logger.error(e);
