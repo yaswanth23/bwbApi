@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
 
 const adminUserDetailsSchema = new mongoose.Schema({
   userName: { type: String, required: true },

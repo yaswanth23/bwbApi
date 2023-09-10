@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Base = require('./base');
 const logger = require('../common/logger')('diagnostics-bao');
-const { CartDao, DiagnosticsDao, AdminDao } = require('../dao');
+const { CartDao, DiagnosticsDao, AdminDao, AuthDao } = require('../dao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const BookingHelper = require('../common/bookingHelper');
@@ -142,6 +142,20 @@ class DiagnosticsBao extends Base {
       session.startTransaction();
 
       let whereObj = {
+        _id: params.userId,
+      };
+
+      let userDetails = await AuthDao.findPharmacyUser(whereObj, session);
+      if (!userDetails.length) {
+        userDetails = await AdminDao.findAdminUserDetails(whereObj, session);
+        if (!userDetails.length) {
+          error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
+          error.code = ERROR_CODES.ERROR_CODE_404;
+          throw error;
+        }
+      }
+
+      whereObj = {
         _id: params.bookingId,
         userId: params.userId,
       };
@@ -150,6 +164,14 @@ class DiagnosticsBao extends Base {
         whereObj,
         session
       );
+
+      let bookingStates = await BookingHelper.calculateBookingStates(
+        params.userId,
+        userDetails[0].roleId,
+        params.bookingId
+      );
+
+      bookingDetails[0].bookingStates = bookingStates;
 
       await session.commitTransaction();
       session.endSession();
