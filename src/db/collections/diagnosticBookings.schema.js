@@ -13,6 +13,7 @@ const diagnosticBookingSchema = new mongoose.Schema({
   collectionDate: { type: String, default: null },
   totalPrice: { type: Number, required: true },
   status: { type: String, required: true },
+  reports: { type: Array, default: [] },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: new Date().toISOString() },
   updatedOn: { type: Date, default: new Date().toISOString() },
