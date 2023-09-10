@@ -50,6 +50,7 @@ class AdminBao extends Base {
         mobileNumber: params.mobileNumber,
         partnerName: params.partnerName,
         roleId: params.roleId,
+        partnerId: params.partnerId,
         isActive: true,
         createdOn: istTimestamp,
         updatedOn: istTimestamp,
