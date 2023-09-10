@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
 const bcrypt = require('bcrypt');
 const Base = require('./base');
 const { AuthDao, AdminDao } = require('../dao');
@@ -7,7 +6,6 @@ const logger = require('../common/logger')('auth-bao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const error = new Error();
-const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 const fs = require('fs');
 const db = require('../db');
 const csv = require('csv-parser');

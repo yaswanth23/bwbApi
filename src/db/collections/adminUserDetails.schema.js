@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 
 const adminUserDetailsSchema = new mongoose.Schema({
   userName: { type: String, required: true },
@@ -9,8 +8,8 @@ const adminUserDetailsSchema = new mongoose.Schema({
   partnerId: { type: Number },
   roleId: { type: Number, required: true },
   isActive: { type: Boolean, default: true },
-  createdOn: { type: Date, default: istTimestamp },
-  updatedOn: { type: Date, default: istTimestamp },
+  createdOn: { type: Date, default: new Date().toISOString() },
+  updatedOn: { type: Date, default: new Date().toISOString() },
 });
 
 const adminUserDetails = mongoose.model(

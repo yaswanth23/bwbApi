@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
 const bcrypt = require('bcrypt');
 const Base = require('./base');
 const { AdminDao, AuthDao } = require('../dao');
@@ -7,7 +6,6 @@ const logger = require('../common/logger')('admin-bao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const error = new Error();
-const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 
 class AdminBao extends Base {
   constructor() {
@@ -52,8 +50,8 @@ class AdminBao extends Base {
         roleId: params.roleId,
         partnerId: params.partnerId,
         isActive: true,
-        createdOn: istTimestamp,
-        updatedOn: istTimestamp,
+        createdOn: new Date().toISOString(),
+        updatedOn: new Date().toISOString(),
       };
 
       adminUserDetails = await AdminDao.createAdminUser(insertObj, session);

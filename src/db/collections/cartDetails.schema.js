@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
-const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 
 const cartItemSchema = new mongoose.Schema({
   testId: { type: String, required: true },
   testName: { type: String, required: true },
-  createdOn: { type: Date, default: istTimestamp },
-  updatedOn: { type: Date, default: istTimestamp },
+  createdOn: { type: Date, default: new Date().toISOString() },
+  updatedOn: { type: Date, default: new Date().toISOString() },
 });
 
 const cartDetailsSchema = new mongoose.Schema({
@@ -14,8 +12,8 @@ const cartDetailsSchema = new mongoose.Schema({
   cartItems: [cartItemSchema],
   selectedPincode: { type: Number, default: null },
   isActive: { type: Boolean, default: true },
-  createdOn: { type: Date, default: istTimestamp },
-  updatedOn: { type: Date, default: istTimestamp },
+  createdOn: { type: Date, default: new Date().toISOString() },
+  updatedOn: { type: Date, default: new Date().toISOString() },
 });
 
 const cartDetails = mongoose.model(

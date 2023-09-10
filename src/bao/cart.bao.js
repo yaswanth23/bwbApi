@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment');
 const Base = require('./base');
 const logger = require('../common/logger')('cart-bao');
 const { AuthDao, CartDao, GeneralDao } = require('../dao');
@@ -7,7 +6,6 @@ const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const CartHelper = require('../common/cartHelper');
 const TimeSlotHelper = require('../common/timeSlotHelper');
-const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 const error = new Error();
 
 class CartBao extends Base {
@@ -82,7 +80,7 @@ class CartBao extends Base {
       let updateObj = {
         cartItems: [...cartDetails[0].cartItems, ...newCartItems],
         selectedPincode: params.selectedPincode,
-        updatedOn: istTimestamp,
+        updatedOn: new Date().toISOString(),
       };
 
       await CartDao.updateCartItems(updateObj, whereObj, session);

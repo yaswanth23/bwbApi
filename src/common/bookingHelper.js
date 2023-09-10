@@ -30,9 +30,19 @@ module.exports.insertBookingCapture = async (userId, bookingId, stateId) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    await BookingDao.insertBookingCaptureStates(insertObj, txn);
+    let bookingState = await BookingDao.insertBookingCaptureStates(
+      insertObj,
+      txn
+    );
+
+    let whereObj = {
+      stateId: bookingState.stateId,
+    };
+
+    let status = await BookingDao.findBookingStates(whereObj, txn);
+
     await txn.commit();
-    return 'success';
+    return status[0].stateName;
   } catch (error) {
     logger.error(error);
     await txn.rollback();

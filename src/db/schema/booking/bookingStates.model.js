@@ -44,5 +44,11 @@ module.exports = (sequelize) => {
     updatedAt: false,
     freezeTableName: true,
   });
+  table.associate = (models) => {
+    table.belongsTo(models.BookingSchema.BookingCaptureStates, {
+      foreignKey: 'stateId',
+      targetKey: 'stateId',
+    });
+  };
   return table;
 };
