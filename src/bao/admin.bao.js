@@ -127,6 +127,7 @@ class AdminBao extends Base {
         userId: adminUserDetails[0]._id,
         userName: adminUserDetails[0].userName,
         partnerName: adminUserDetails[0].partnerName,
+        partnerId: adminUserDetails[0].partnerName,
         roleId: adminUserDetails[0].roleId,
         isActive: adminUserDetails[0].isActive,
       };
