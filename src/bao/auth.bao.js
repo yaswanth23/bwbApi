@@ -27,7 +27,7 @@ class AuthBao extends Base {
         roleId: params.roleId,
       };
 
-      let roleDetails = await AdminDao.findAdminUserRoles(whereObj, session);
+      let roleDetails = await AdminDao.findUserRoles(whereObj, session);
       if (!roleDetails.length) {
         error.message = ERROR_MESSAGES.ERROR_MESSAGE_ROLE_NOT_FOUND;
         error.code = ERROR_CODES.ERROR_CODE_404;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 
-const adminUserRolesSchema = new mongoose.Schema({
+const userRolesSchema = new mongoose.Schema({
   roleId: { type: Number, required: true },
   roleName: { type: String, required: true },
   isActive: { type: Boolean, default: true },
@@ -10,10 +10,6 @@ const adminUserRolesSchema = new mongoose.Schema({
   updatedOn: { type: Date, default: istTimestamp },
 });
 
-const adminUserRoles = mongoose.model(
-  'adminUserRoles',
-  adminUserRolesSchema,
-  'adminUserRoles'
-);
+const userRoles = mongoose.model('userRoles', userRolesSchema, 'userRoles');
 
-module.exports = adminUserRoles;
+module.exports = userRoles;

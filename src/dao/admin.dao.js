@@ -1,8 +1,8 @@
-const { AdminUserRoles, AdminUserDetails } = require('../db/collections');
+const { UserRoles, AdminUserDetails } = require('../db/collections');
 
-module.exports.findAdminUserRoles = async (whereObj, session) => {
+module.exports.findUserRoles = async (whereObj, session) => {
   try {
-    let data = await AdminUserRoles.find(whereObj).session(session).lean(true);
+    let data = await UserRoles.find(whereObj).session(session).lean(true);
     return data;
   } catch (e) {
     throw e;
