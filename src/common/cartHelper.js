@@ -1,6 +1,6 @@
 const db = require('../db');
 const { GeneralDao } = require('../dao');
-const logger = require('../common/logger')('general-bao');
+const logger = require('../common/logger')('cart-helper');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const error = new Error();
 

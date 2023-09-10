@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
+
 const schema = '';
 const tableName = `diagnosticsTestAttributes`;
+
 const definition = {
   attributeId: {
     type: DataTypes.INTEGER,

@@ -5,6 +5,7 @@ const logger = require('../common/logger')('diagnostics-bao');
 const { CartDao, DiagnosticsDao, AdminDao } = require('../dao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
+const BookingHelper = require('../common/bookingHelper');
 const istTimestamp = moment.utc().add(5, 'hours').add(30, 'minutes').toDate();
 const error = new Error();
 
@@ -68,6 +69,12 @@ class DiagnosticsBao extends Base {
       let bookingData = await DiagnosticsDao.createDiagnosticBookings(
         params,
         session
+      );
+
+      await BookingHelper.insertBookingCapture(
+        params.userId,
+        bookingData[0]._id.toString(),
+        1
       );
 
       await session.commitTransaction();

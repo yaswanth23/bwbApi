@@ -1,23 +1,28 @@
 const { DataTypes } = require('sequelize');
 
 const schema = '';
-const tableName = `partnerDetails`;
+const tableName = 'bookingStateTransition';
 
 const definition = {
-  partnerId: {
+  fromStateId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    autoIncrement: true,
-    field: 'partnerid',
+    field: 'fromstateid',
     primaryKey: true,
   },
-  partnerName: {
-    type: DataTypes.STRING,
+  toStateId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    field: 'partnername',
+    field: 'tostateid',
+    primaryKey: true,
+  },
+  triggerCondition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'triggercondition',
   },
   isActive: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BOOLEAN,
     allowNull: false,
     field: 'isactive',
   },
