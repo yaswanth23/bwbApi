@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
 const Base = require('./base');
-const { AuthDao } = require('../dao');
+const { AuthDao, AdminDao } = require('../dao');
 const logger = require('../common/logger')('auth-bao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
@@ -22,7 +22,19 @@ class AuthBao extends Base {
     try {
       logger.info('inside pharmacyUserSignUp bao', params);
       session.startTransaction();
+
       let whereObj = {
+        roleId: params.roleId,
+      };
+
+      let roleDetails = await AdminDao.findAdminUserRoles(whereObj, session);
+      if (!roleDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_ROLE_NOT_FOUND;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+
+      whereObj = {
         pharmacyPhone: params.pharmacyPhone,
       };
       let pharmacyUserData = await AuthDao.findPharmacyUser(whereObj, session);
@@ -37,6 +49,7 @@ class AuthBao extends Base {
         pharmacyPhone: params.pharmacyPhone,
         pharmacyAddress: params.pharmacyAddress,
         pharmacyPincode: params.pharmacyPincode,
+        roleId: params.roleId,
       };
       pharmacyUserData = await AuthDao.createPharmacyUser(insertObj, session);
 
@@ -112,6 +125,7 @@ class AuthBao extends Base {
         pharmacyPhone: pharmacyUserData[0].pharmacyPhone,
         pharmacyAddress: pharmacyUserData[0].pharmacyAddress,
         pharmacyPincode: pharmacyUserData[0].pharmacyPincode,
+        roleId: pharmacyUserData[0].roleId,
         isActive: pharmacyUserData[0].isActive,
       };
 

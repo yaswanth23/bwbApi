@@ -7,6 +7,7 @@ const PharmacyUserDetailsSchema = new mongoose.Schema({
   pharmacyPhone: { type: Number, required: true },
   pharmacyAddress: { type: String, required: true },
   pharmacyPincode: { type: Number, required: true },
+  roleId: { type: Number, required: true },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: istTimestamp },
   updatedOn: { type: Date, default: istTimestamp },

@@ -7,7 +7,7 @@ const adminUserDetailsSchema = new mongoose.Schema({
   mobileNumber: { type: Number, required: true },
   partnerName: { type: String },
   partnerId: { type: Number },
-  roleId: { type: String, required: true },
+  roleId: { type: Number, required: true },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: istTimestamp },
   updatedOn: { type: Date, default: istTimestamp },

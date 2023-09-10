@@ -12,6 +12,7 @@ module.exports.pharmacyUserSignUp = async (req, res) => {
       pharmacyPhone: Joi.number().required(),
       pharmacyAddress: Joi.string().required(),
       pharmacyPincode: Joi.number().required(),
+      roleId: Joi.number().required(),
     });
     const params = await validateSchema(req.body, schemaVerifyData);
     const authBao = new AuthBao();
