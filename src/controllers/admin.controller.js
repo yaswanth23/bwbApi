@@ -12,6 +12,7 @@ module.exports.adminUserSignUp = async (req, res) => {
       mobileNumber: Joi.number().required(),
       roleId: Joi.number().required(),
       partnerName: Joi.string().allow(null),
+      partnerId: Joi.number().allow(null),
     });
     const params = await validateSchema(req.body, schemaVerifyData);
     const adminBao = new AdminBao();
