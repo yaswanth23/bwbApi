@@ -41,6 +41,19 @@ module.exports.insertBookingCapture = async (userId, bookingId, stateId) => {
     let status = await BookingDao.findBookingStates(whereObj, txn);
 
     await txn.commit();
+
+    txn = await db.sequelize.transaction();
+    insertObj = {
+      bookingId: bookingId,
+      stateId: 4,
+      createdBy: userId,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    await BookingDao.insertBookingCaptureStates(insertObj, txn);
+    await txn.commit();
+    
     return status[0].stateName;
   } catch (error) {
     logger.error(error);
