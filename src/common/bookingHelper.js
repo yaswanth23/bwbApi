@@ -86,7 +86,19 @@ module.exports.calculateBookingStates = async (userId, roleId, bookingId) => {
       return result;
     });
 
+    const state2Index = finalObject.find((state) => state.stateId === 2);
     const state3Index = finalObject.findIndex((state) => state.stateId === 3);
+
+    if (
+      state2Index &&
+      state2Index.isActive &&
+      state3Index &&
+      !state3Index.isActive
+    ) {
+      finalObject = finalObject.filter(
+        (state) => ![1, 3].includes(state.stateId)
+      );
+    }
 
     if (state3Index !== -1 && finalObject[state3Index].isActive) {
       finalObject = finalObject.filter(
