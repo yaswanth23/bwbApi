@@ -80,7 +80,7 @@ module.exports.calculateBookingStates = async (userId, roleId, bookingId) => {
 
     whereObj = {
       bookingId: bookingId,
-      createdBy: userId,
+      // createdBy: userId,
     };
 
     let bookingCaptureStates = await BookingDao.findBookingCaptureStates(
