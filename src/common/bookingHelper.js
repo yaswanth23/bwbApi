@@ -2,6 +2,9 @@ const db = require('../db');
 const { Op } = require('sequelize');
 const { BookingDao, AdminDao } = require('../dao');
 const logger = require('../common/logger')('booking-helper');
+const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
+const { STATUS_CODES } = require('../common/constants');
+const error = new Error();
 
 module.exports.insertBookingCapture = async (userId, bookingId, stateId) => {
   let txn = await db.sequelize.transaction();
@@ -53,7 +56,7 @@ module.exports.insertBookingCapture = async (userId, bookingId, stateId) => {
     };
     await BookingDao.insertBookingCaptureStates(insertObj, txn);
     await txn.commit();
-    
+
     return status[0].stateName;
   } catch (error) {
     logger.error(error);
@@ -121,6 +124,41 @@ module.exports.calculateBookingStates = async (userId, roleId, bookingId) => {
 
     await txn.commit();
     return finalObject;
+  } catch (error) {
+    logger.error(error);
+    await txn.rollback();
+    throw error;
+  }
+};
+
+module.exports.updateBookingStates = async (params) => {
+  let txn = await db.sequelize.transaction();
+  logger.info('inside updateBookingStates helper', params);
+  try {
+    let whereObj = {
+      bookingId: params.bookingId,
+      stateId: params.stateId,
+    };
+    let bookingStates = await BookingDao.findBookingCaptureStates(
+      whereObj,
+      txn
+    );
+    if (bookingStates.length > 0) {
+      error.message = ERROR_MESSAGES.ERROR_MESSAGE_BOOKING_STATE_ALREADY_EXISTS;
+      error.code = ERROR_CODES.ERROR_CODE_409;
+      throw error;
+    }
+    let insertObj = {
+      bookingId: params.bookingId,
+      stateId: params.stateId,
+      createdBy: params.userId,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    await BookingDao.insertBookingCaptureStates(insertObj, txn);
+    await txn.commit();
+    return 'success';
   } catch (error) {
     logger.error(error);
     await txn.rollback();

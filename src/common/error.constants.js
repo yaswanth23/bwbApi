@@ -11,5 +11,7 @@ module.exports = {
     ERROR_MESSAGE_DIAGNOSTIC_TEST_NOT_FOUND:
       'The Diagnostic Test details are not found',
     ERROR_MESSAGE_ROLE_NOT_FOUND: 'Role not found',
+    ERROR_MESSAGE_BOOKING_STATE_ALREADY_EXISTS:
+      'Booking state is already exists!',
   },
 };

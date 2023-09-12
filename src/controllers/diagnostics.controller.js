@@ -106,6 +106,23 @@ module.exports.getPartnerDiagnosticBookings = async (req, res) => {
   }
 };
 
+module.exports.updateBookingStatus = async (req, res) => {
+  try {
+    logger.info('inside updateBookingStatus controller');
+    const schemaVerifyData = Joi.object().keys({
+      userId: Joi.string().required(),
+      bookingId: Joi.string().required(),
+      stateId: Joi.number().required(),
+    });
+    const params = await validateSchema(req.body, schemaVerifyData);
+    const diagnosticsBao = new DiagnosticsBao();
+    const result = await diagnosticsBao.updateBookingStatus(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

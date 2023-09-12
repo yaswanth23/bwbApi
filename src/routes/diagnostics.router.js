@@ -28,4 +28,9 @@ router.get('/get/partner/diagnostics/bookings', [
   DiagnosticsController.getPartnerDiagnosticBookings,
 ]);
 
+router.post('/update/booking/status', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.updateBookingStatus,
+]);
+
 module.exports = router;

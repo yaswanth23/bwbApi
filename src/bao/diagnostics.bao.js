@@ -269,6 +269,20 @@ class DiagnosticsBao extends Base {
       throw e;
     }
   }
+
+  async updateBookingStatus(params) {
+    try {
+      logger.info('inside updateBookingStatus bao', params);
+      await BookingHelper.updateBookingStates(params);
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        successMessage: 'data updated successfully',
+      };
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    }
+  }
 }
 
 module.exports = DiagnosticsBao;
