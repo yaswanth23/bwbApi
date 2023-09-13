@@ -5,6 +5,7 @@ const { CartDao, DiagnosticsDao, AdminDao, AuthDao } = require('../dao');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const BookingHelper = require('../common/bookingHelper');
+const { FileService } = require('../services');
 const error = new Error();
 
 class DiagnosticsBao extends Base {
@@ -282,6 +283,21 @@ class DiagnosticsBao extends Base {
         successCode: STATUS_CODES.STATUS_CODE_200,
         successMessage: 'data updated successfully',
       };
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    }
+  }
+
+  async uploadReports(files) {
+    try {
+      logger.info('inside uploadReports bao');
+      const bucketName = 'bwb-patient-records';
+      const updatedMedia = await FileService.uploadFilesAndGetUrls(
+        bucketName,
+        files
+      );
+      return updatedMedia;
     } catch (e) {
       logger.error(e);
       throw e;

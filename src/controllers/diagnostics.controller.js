@@ -123,6 +123,18 @@ module.exports.updateBookingStatus = async (req, res) => {
   }
 };
 
+module.exports.uploadReports = async (req, res) => {
+  try {
+    logger.info('inside uploadReports controller');
+    const files = req.files;
+    const diagnosticsBao = new DiagnosticsBao();
+    const result = await diagnosticsBao.uploadReports(files);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,
