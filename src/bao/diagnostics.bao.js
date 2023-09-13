@@ -152,13 +152,17 @@ class DiagnosticsBao extends Base {
           error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
           error.code = ERROR_CODES.ERROR_CODE_404;
           throw error;
+        } else {
+          whereObj = {
+            _id: params.bookingId,
+          };
         }
+      } else {
+        whereObj = {
+          _id: params.bookingId,
+          userId: params.userId,
+        };
       }
-
-      whereObj = {
-        _id: params.bookingId,
-        userId: params.userId,
-      };
 
       let bookingDetails = await DiagnosticsDao.findDiagnosticBookingDetails(
         whereObj,
