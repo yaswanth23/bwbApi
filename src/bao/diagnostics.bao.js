@@ -303,6 +303,50 @@ class DiagnosticsBao extends Base {
       throw e;
     }
   }
+
+  async submitReports(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside submitReports bao', params);
+      session.startTransaction();
+
+      let whereObj = {
+        _id: params.bookingId,
+      };
+
+      let bookingDetails = await DiagnosticsDao.findDiagnosticBookingDetails(
+        whereObj,
+        session
+      );
+      if (!bookingDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_BOOKING_ID_INVALID;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+
+      let updateObj = {
+        reports: [...bookingDetails[0].reports, ...params.fileUrls],
+      };
+
+      await DiagnosticsDao.updateDiagnosticBookings(
+        updateObj,
+        whereObj,
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        successMessage: 'files are submitted',
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 module.exports = DiagnosticsBao;

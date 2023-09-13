@@ -86,3 +86,20 @@ module.exports.updatePatientDetails = async (updateObj, whereObj, session) => {
     throw error;
   }
 };
+
+module.exports.updateDiagnosticBookings = async (
+  updateObj,
+  whereObj,
+  session
+) => {
+  try {
+    let data = await DiagnosticBookings.updateOne(whereObj, updateObj, {
+      session: session,
+      new: true,
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

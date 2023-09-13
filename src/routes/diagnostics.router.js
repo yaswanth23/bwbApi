@@ -52,4 +52,9 @@ router.post('/upload/reports', [
   DiagnosticsController.uploadReports,
 ]);
 
+router.post('/submit/reports', [
+  HeaderService.validateApiAuthorization,
+  DiagnosticsController.submitReports,
+]);
+
 module.exports = router;

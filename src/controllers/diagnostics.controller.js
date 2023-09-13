@@ -135,6 +135,22 @@ module.exports.uploadReports = async (req, res) => {
   }
 };
 
+module.exports.submitReports = async (req, res) => {
+  try {
+    logger.info('inside submitReports controller');
+    const schemaVerifyData = Joi.object().keys({
+      bookingId: Joi.string().required(),
+      fileUrls: Joi.array(),
+    });
+    const params = await validateSchema(req.body, schemaVerifyData);
+    const diagnosticsBao = new DiagnosticsBao();
+    const result = await diagnosticsBao.submitReports(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

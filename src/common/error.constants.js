@@ -13,5 +13,6 @@ module.exports = {
     ERROR_MESSAGE_ROLE_NOT_FOUND: 'Role not found',
     ERROR_MESSAGE_BOOKING_STATE_ALREADY_EXISTS:
       'Booking state is already exists!',
+    ERROR_MESSAGE_BOOKING_ID_INVALID: 'Invalid booking id',
   },
 };
