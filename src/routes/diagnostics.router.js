@@ -49,6 +49,7 @@ router.post('/update/booking/status', [
 
 router.post('/upload/reports', [
   upload.array('files', 50),
+  HeaderService.validateApiAuthorization,
   DiagnosticsController.uploadReports,
 ]);
 
