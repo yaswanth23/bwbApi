@@ -16,7 +16,7 @@ const uploadFileToS3 = async (bucketName, fileName, filePath) => {
       Bucket: bucketName,
       Key: fileName,
       Body: fileContent,
-      ContentType: 'application/pdf',
+      ContentType: 'application/octet-stream', // Set to a generic content type
     };
     const result = await S3.upload(params).promise();
     return result.Location;
