@@ -97,14 +97,26 @@ class AdminBao extends Base {
         session
       );
 
+      let doctorUserDetails = [];
+      let userId;
       if (!adminUserDetails.length) {
-        error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
-        error.code = ERROR_CODES.ERROR_CODE_404;
-        throw error;
+        doctorUserDetails = await AdminDao.findDoctorUserDetails(
+          whereObj,
+          session
+        );
+        if (!doctorUserDetails.length) {
+          error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_NOT_FOUND;
+          error.code = ERROR_CODES.ERROR_CODE_404;
+          throw error;
+        } else {
+          userId = doctorUserDetails[0]._id;
+        }
+      } else {
+        userId = adminUserDetails[0]._id;
       }
 
       whereObj = {
-        userId: adminUserDetails[0]._id,
+        userId: userId,
       };
 
       let userAuthData = await AuthDao.findUserAuthPass(whereObj, session);
@@ -121,18 +133,115 @@ class AdminBao extends Base {
         throw error;
       }
 
-      let response = {
-        userId: adminUserDetails[0]._id,
-        userName: adminUserDetails[0].userName,
-        partnerName: adminUserDetails[0].partnerName,
-        partnerId: adminUserDetails[0].partnerName,
-        roleId: adminUserDetails[0].roleId,
-        isActive: adminUserDetails[0].isActive,
-      };
+      let response;
+      if (adminUserDetails.length > 0) {
+        response = {
+          userId: adminUserDetails[0]._id,
+          userName: adminUserDetails[0].userName,
+          partnerName: adminUserDetails[0].partnerName,
+          partnerId: adminUserDetails[0].partnerName,
+          roleId: adminUserDetails[0].roleId,
+          isActive: adminUserDetails[0].isActive,
+        };
+      }
+
+      if (doctorUserDetails.length > 0) {
+        response = {
+          userId: doctorUserDetails[0]._id,
+          userName: doctorUserDetails[0].userName,
+          mobileNumber: doctorUserDetails[0].mobileNumber,
+          emailId: doctorUserDetails[0].emailId,
+          age: doctorUserDetails[0].age,
+          gender: doctorUserDetails[0].gender,
+          specialty: doctorUserDetails[0].specialty,
+          yearsOfPractice: doctorUserDetails[0].yearsOfPractice,
+          hospitalAffiliation: doctorUserDetails[0].hospitalAffiliation,
+          clinicAffiliation: doctorUserDetails[0].clinicAffiliation,
+          calendlyUserUrl: doctorUserDetails[0].calendlyUserUrl,
+          roleId: doctorUserDetails[0].roleId,
+          isActive: doctorUserDetails[0].isActive,
+        };
+      }
 
       await session.commitTransaction();
       session.endSession();
       return response;
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async doctorUserSignUp(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside adminUserLogin bao');
+      session.startTransaction();
+
+      let whereObj = {
+        roleId: params.roleId,
+      };
+
+      let roleDetails = await AdminDao.findUserRoles(whereObj, session);
+      if (!roleDetails.length) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_ROLE_NOT_FOUND;
+        error.code = ERROR_CODES.ERROR_CODE_404;
+        throw error;
+      }
+
+      whereObj = {
+        mobileNumber: params.mobileNumber,
+      };
+
+      let doctorUserDetails = await AdminDao.findDoctorUserDetails(
+        whereObj,
+        session
+      );
+      if (doctorUserDetails.length > 0) {
+        error.message = ERROR_MESSAGES.ERROR_MESSAGE_USER_ALREADY_EXISTS;
+        error.code = ERROR_CODES.ERROR_CODE_409;
+        throw error;
+      }
+
+      let insertObj = {
+        userName: params.userName,
+        mobileNumber: params.mobileNumber,
+        emailId: params.emailId,
+        age: params.age,
+        gender: params.gender,
+        specialty: params.specialty,
+        yearsOfPractice: params.yearsOfPractice,
+        hospitalAffiliation: params.hospitalAffiliation,
+        clinicAffiliation: params.clinicAffiliation,
+        roleId: params.roleId,
+        isActive: true,
+        createdOn: new Date().toISOString(),
+        updatedOn: new Date().toISOString(),
+      };
+
+      doctorUserDetails = await AdminDao.createDoctorUser(insertObj, session);
+
+      const saltKey = generateSalt();
+      const hashedKey = hashPasswordWithSalt(
+        params.mobileNumber.toString(),
+        saltKey
+      );
+
+      insertObj = {
+        userId: doctorUserDetails[0]._id,
+        saltKey: saltKey,
+        hashedKey: hashedKey,
+      };
+      await AuthDao.createUserAuthPass(insertObj, session);
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        successMessage: 'User created successfully!',
+      };
     } catch (e) {
       logger.error(e);
       await session.abortTransaction();

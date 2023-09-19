@@ -39,6 +39,30 @@ module.exports.adminUserLogin = async (req, res) => {
   }
 };
 
+module.exports.doctorUserSignUp = async (req, res) => {
+  try {
+    logger.info('inside doctorUserSignUp controller');
+    const schemaVerifyData = Joi.object().keys({
+      userName: Joi.string().required(),
+      mobileNumber: Joi.number().required(),
+      emailId: Joi.string().required(),
+      age: Joi.number().required(),
+      gender: Joi.string().required(),
+      specialty: Joi.string().required(),
+      yearsOfPractice: Joi.number().required(),
+      hospitalAffiliation: Joi.string().required(),
+      clinicAffiliation: Joi.string().allow(null),
+      roleId: Joi.number().required(),
+    });
+    const params = await validateSchema(req.body, schemaVerifyData);
+    const adminBao = new AdminBao();
+    const result = await adminBao.doctorUserSignUp(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,
