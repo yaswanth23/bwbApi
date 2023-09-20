@@ -172,7 +172,7 @@ class CartBao extends Base {
         } else {
           let similarTimeSlotTestIds =
             await this.separateTestIdsWithCommonDates(timeSlots);
-          console.log(similarTimeSlotTestIds);
+
           if (similarTimeSlotTestIds.length > 0) {
             let similarTestIds = similarTimeSlotTestIds[0].testIds;
 

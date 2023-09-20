@@ -6,6 +6,7 @@ const PatientDetails = require('./patientDetails.schema');
 const UserRoles = require('./userRoles.schema');
 const AdminUserDetails = require('./adminUserDetails.schema');
 const DoctorUserDetails = require('./doctorUserDetails.schema');
+const VideoConsultationBookings = require('./videoConsultationBookings.schema');
 
 module.exports = {
   PharmacyUserDetails,
@@ -16,4 +17,5 @@ module.exports = {
   UserRoles,
   AdminUserDetails,
   DoctorUserDetails,
+  VideoConsultationBookings,
 };

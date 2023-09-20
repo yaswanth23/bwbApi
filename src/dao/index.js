@@ -5,6 +5,7 @@ const CartDao = require('./cart.dao');
 const DiagnosticsDao = require('./diagnostics.dao');
 const AdminDao = require('./admin.dao');
 const BookingDao = require('./booking.dao');
+const VideoConsultationDao = require('./videoConsultation.dao');
 
 module.exports = {
   AuthDao,
@@ -14,4 +15,5 @@ module.exports = {
   DiagnosticsDao,
   AdminDao,
   BookingDao,
+  VideoConsultationDao,
 };
