@@ -82,7 +82,7 @@ class VideoConsultationBao extends Base {
         }
       } else if (params.event === APPLICATION.CALENDLY_INVITEE_CANCELED) {
         whereObj = {
-          scheduledEventUri: params.payload.scheduled_event.name,
+          scheduledEventUri: params.payload.scheduled_event.uri,
         };
 
         let videoEventDetails =

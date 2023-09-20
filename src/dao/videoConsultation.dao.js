@@ -25,16 +25,14 @@ module.exports.findVideoConsultationBookings = async (whereObj, session) => {
 module.exports.updateVideoConsultationBookings = async (
   updateObj,
   whereObj,
-  txn
+  session
 ) => {
   try {
-    let data = await VideoConsultationBookings.update(
-      updateObj,
-      {
-        where: whereObj,
-      },
-      { transaction: txn }
-    );
+    let data = await VideoConsultationBookings.updateOne(whereObj, updateObj, {
+      session: session,
+      new: true,
+    });
+
     return data;
   } catch (error) {
     throw error;
