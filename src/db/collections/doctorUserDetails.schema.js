@@ -12,6 +12,7 @@ const doctorUserDetailsSchema = new mongoose.Schema({
   clinicAffiliation: { type: String, default: null },
   calendlyUserUrl: { type: String, default: null },
   calendlyUserCalenderUrl: { type: String, default: null },
+  profileImageUrl: { type: String, default: null },
   roleId: { type: Number, required: true },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: new Date().toISOString() },

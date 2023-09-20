@@ -18,4 +18,9 @@ router.post('/doctor/user/sign_up', [
   AdminController.doctorUserSignUp,
 ]);
 
+router.get('/doctor/users/list', [
+  HeaderService.validateApiAuthorization,
+  AdminController.getDoctorsList,
+]);
+
 module.exports = router;

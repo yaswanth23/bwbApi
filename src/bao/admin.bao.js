@@ -250,6 +250,46 @@ class AdminBao extends Base {
       throw e;
     }
   }
+
+  async getDoctorsList(params, limit, page) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside adminUserLogin bao');
+      session.startTransaction();
+
+      let offset = (page - 1) * limit;
+      let whereObj = {};
+
+      let doctorUsers = await AdminDao.getAllDoctorUserDetails(
+        whereObj,
+        limit,
+        offset
+      );
+
+      let totalDoctorsCount = await AdminDao.getDoctorUsersCount(
+        whereObj,
+        session
+      );
+
+      let totalPages = totalDoctorsCount / limit;
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        doctorUsers: doctorUsers,
+        metaData: {
+          totalDoctorsCount: totalDoctorsCount,
+          totalPages: totalPages ? Math.ceil(totalPages) : 1,
+        },
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 function generateSalt() {

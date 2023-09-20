@@ -56,3 +56,35 @@ module.exports.findDoctorUserDetails = async (whereObj, session) => {
     throw e;
   }
 };
+
+module.exports.getAllDoctorUserDetails = async (
+  whereObj,
+  limit,
+  offset,
+  session
+) => {
+  try {
+    const data = await DoctorUserDetails.find(whereObj)
+      .sort({ createdOn: -1 })
+      .skip(Number(offset))
+      .limit(Number(limit))
+      .lean(true)
+      .session(session)
+      .exec();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.getDoctorUsersCount = async (whereObj, session) => {
+  try {
+    const count = await DoctorUserDetails.countDocuments(whereObj)
+      .session(session)
+      .exec();
+    return count;
+  } catch (error) {
+    throw error;
+  }
+};
