@@ -158,6 +158,7 @@ class AdminBao extends Base {
           hospitalAffiliation: doctorUserDetails[0].hospitalAffiliation,
           clinicAffiliation: doctorUserDetails[0].clinicAffiliation,
           calendlyUserUrl: doctorUserDetails[0].calendlyUserUrl,
+          calendlyUserCalenderUrl: doctorUserDetails[0].calendlyUserCalenderUrl,
           roleId: doctorUserDetails[0].roleId,
           isActive: doctorUserDetails[0].isActive,
         };
