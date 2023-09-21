@@ -7,4 +7,9 @@ router.post('/video_call/schedules', [
   VideoConsultationController.captureMeetingSchedules,
 ]);
 
+router.get('/get/all_appointments', [
+  HeaderService.validateApiAuthorization,
+  VideoConsultationController.getAllAppointments,
+]);
+
 module.exports = router;

@@ -15,6 +15,28 @@ module.exports.captureMeetingSchedules = async (req, res) => {
   }
 };
 
+module.exports.getAllAppointments = async (req, res) => {
+  try {
+    logger.info('inside getAllAppointments controller');
+    const schemaVerifyData = Joi.object().keys({
+      userId: Joi.string().required(),
+      page: Joi.number().optional(),
+      limit: Joi.number().optional(),
+    });
+    const params = await validateSchema(req.query, schemaVerifyData);
+    const { limit = 10, page = 1 } = req.query;
+    const videoConsultationBao = new VideoConsultationBao();
+    const result = await videoConsultationBao.getAllAppointments(
+      params,
+      limit,
+      page
+    );
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

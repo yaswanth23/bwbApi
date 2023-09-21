@@ -38,3 +38,24 @@ module.exports.updateVideoConsultationBookings = async (
     throw error;
   }
 };
+
+module.exports.getAllVideoConsultationBookings = async (
+  whereObj,
+  limit,
+  offset,
+  session
+) => {
+  try {
+    const data = await VideoConsultationBookings.find(whereObj)
+      .sort({ createdOn: -1 })
+      .skip(Number(offset))
+      .limit(Number(limit))
+      .lean(true)
+      .session(session)
+      .exec();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -117,6 +117,58 @@ class VideoConsultationBao extends Base {
       throw e;
     }
   }
+
+  async getAllAppointments(params, limit, page) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside captureMeetingSchedules bao');
+      session.startTransaction();
+
+      let offset = (page - 1) * limit;
+      let whereObj = {
+        _id: params.userId,
+      };
+
+      let doctorUserDetails = await AdminDao.findDoctorUserDetails(
+        whereObj,
+        session
+      );
+
+      let pharmacyUserData = await AuthDao.findPharmacyUser(whereObj, session);
+
+      if (doctorUserDetails.length > 0) {
+        whereObj = {
+          doctorUserId: params.userId,
+        };
+      }
+
+      if (pharmacyUserData.length > 0) {
+        whereObj = {
+          pharmacyUserId: params.userId,
+        };
+      }
+
+      let allAppointments =
+        await VideoConsultationDao.getAllVideoConsultationBookings(
+          whereObj,
+          limit,
+          offset,
+          session
+        );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        allAppointments: allAppointments,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 module.exports = VideoConsultationBao;
