@@ -170,7 +170,7 @@ class VideoConsultationBao extends Base {
         successCode: STATUS_CODES.STATUS_CODE_200,
         allAppointments: allAppointments,
         metaData: {
-          totalBookingCount: totalAppointmentCount,
+          totalAppointmentCount: totalAppointmentCount,
           totalPages: totalPages ? Math.ceil(totalPages) : 1,
         },
       };
