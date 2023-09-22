@@ -59,3 +59,17 @@ module.exports.getAllVideoConsultationBookings = async (
     throw error;
   }
 };
+
+module.exports.getVideoConsultationBookingsCount = async (
+  whereObj,
+  session
+) => {
+  try {
+    const count = await VideoConsultationBookings.countDocuments(whereObj)
+      .session(session)
+      .exec();
+    return count;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -156,11 +156,23 @@ class VideoConsultationBao extends Base {
           session
         );
 
+      let totalAppointmentCount =
+        await VideoConsultationDao.getVideoConsultationBookingsCount(
+          whereObj,
+          session
+        );
+
+      let totalPages = totalAppointmentCount / limit;
+
       await session.commitTransaction();
       session.endSession();
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
         allAppointments: allAppointments,
+        metaData: {
+          totalBookingCount: totalAppointmentCount,
+          totalPages: totalPages ? Math.ceil(totalPages) : 1,
+        },
       };
     } catch (e) {
       logger.error(e);
