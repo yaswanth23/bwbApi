@@ -156,6 +156,22 @@ class VideoConsultationBao extends Base {
           session
         );
 
+      allAppointments = await Promise.all(
+        allAppointments.map(async (val) => {
+          whereObj = {
+            _id: val.doctorUserId,
+          };
+          let doctorUserDetails = await AdminDao.findDoctorUserDetails(
+            whereObj,
+            session
+          );
+          return {
+            ...val,
+            doctorName: doctorUserDetails[0].userName,
+          };
+        })
+      );
+
       let totalAppointmentCount =
         await VideoConsultationDao.getVideoConsultationBookingsCount(
           whereObj,
