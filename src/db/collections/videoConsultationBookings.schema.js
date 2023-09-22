@@ -14,6 +14,7 @@ const videoConsultationBookingSchema = new mongoose.Schema({
   scheduledEventName: { type: String, required: true },
   startTime: { type: String, required: true },
   endTime: { type: String, required: true },
+  prescriptionDetails: { type: Array, default: null },
   status: { type: String, required: true },
   isActive: { type: Boolean, default: true },
   createdOn: { type: Date, default: new Date().toISOString() },
