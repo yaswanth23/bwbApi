@@ -156,6 +156,12 @@ class VideoConsultationBao extends Base {
           session
         );
 
+      let totalAppointmentCount =
+        await VideoConsultationDao.getVideoConsultationBookingsCount(
+          whereObj,
+          session
+        );
+
       allAppointments = await Promise.all(
         allAppointments.map(async (val) => {
           whereObj = {
@@ -171,12 +177,6 @@ class VideoConsultationBao extends Base {
           };
         })
       );
-
-      let totalAppointmentCount =
-        await VideoConsultationDao.getVideoConsultationBookingsCount(
-          whereObj,
-          session
-        );
 
       let totalPages = totalAppointmentCount / limit;
 
