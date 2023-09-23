@@ -208,14 +208,9 @@ class VideoConsultationBao extends Base {
         _id: params.appointmentId,
       };
 
-      let videoConsultationData =
-        await VideoConsultationDao.findVideoConsultationBookings(
-          whereObj,
-          session
-        );
-
       let updateObj = {
         prescriptionDetails: params.prescriptionDetails,
+        updatedOn: new Date().toISOString(),
       };
 
       await VideoConsultationDao.updateVideoConsultationBookings(
