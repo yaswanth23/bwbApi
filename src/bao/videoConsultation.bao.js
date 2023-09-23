@@ -197,6 +197,46 @@ class VideoConsultationBao extends Base {
       throw e;
     }
   }
+
+  async updatePrescriptionDetails(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside updatePrescriptionDetails bao');
+      session.startTransaction();
+
+      let whereObj = {
+        _id: params.appointmentId,
+      };
+
+      let videoConsultationData =
+        await VideoConsultationDao.findVideoConsultationBookings(
+          whereObj,
+          session
+        );
+
+      let updateObj = {
+        prescriptionDetails: params.prescriptionDetails,
+      };
+
+      await VideoConsultationDao.updateVideoConsultationBookings(
+        updateObj,
+        whereObj,
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        successMessage: 'data updated successfully!',
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 module.exports = VideoConsultationBao;

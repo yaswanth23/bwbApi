@@ -12,4 +12,9 @@ router.get('/get/all_appointments', [
   VideoConsultationController.getAllAppointments,
 ]);
 
+router.post('/update/prescription_details', [
+  HeaderService.validateApiAuthorization,
+  VideoConsultationController.updatePrescriptionDetails,
+]);
+
 module.exports = router;
