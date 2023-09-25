@@ -232,6 +232,51 @@ class VideoConsultationBao extends Base {
       throw e;
     }
   }
+
+  async getAppointmentDetails(params) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getAppointmentDetails bao');
+      session.startTransaction();
+
+      let whereObj = {
+        _id: params.appointmentId,
+      };
+      let appointmentDetails =
+        await VideoConsultationDao.findVideoConsultationBookings(
+          whereObj,
+          session
+        );
+
+      appointmentDetails = await Promise.all(
+        appointmentDetails.map(async (val) => {
+          whereObj = {
+            _id: val.doctorUserId,
+          };
+          let doctorUserDetails = await AdminDao.findDoctorUserDetails(
+            whereObj,
+            session
+          );
+          return {
+            ...val,
+            doctorName: doctorUserDetails[0].userName,
+          };
+        })
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        appointmentDetails: appointmentDetails,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 module.exports = VideoConsultationBao;

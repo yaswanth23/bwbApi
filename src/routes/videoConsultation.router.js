@@ -17,4 +17,9 @@ router.post('/update/prescription_details', [
   VideoConsultationController.updatePrescriptionDetails,
 ]);
 
+router.get('/get/appointments/:appointmentId', [
+  HeaderService.validateApiAuthorization,
+  VideoConsultationController.getAppointmentDetails,
+]);
+
 module.exports = router;

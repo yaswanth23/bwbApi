@@ -53,6 +53,22 @@ module.exports.updatePrescriptionDetails = async (req, res) => {
   }
 };
 
+module.exports.getAppointmentDetails = async (req, res) => {
+  try {
+    logger.info('inside getAppointmentDetails controller');
+    const { appointmentId } = req.params;
+    const verifyData = Joi.object({
+      appointmentId: Joi.string().required(),
+    });
+    const params = await validateSchema({ appointmentId }, verifyData);
+    const videoConsultationBao = new VideoConsultationBao();
+    const result = await videoConsultationBao.getAppointmentDetails(params);
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,
