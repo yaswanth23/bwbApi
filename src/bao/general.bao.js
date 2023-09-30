@@ -4,9 +4,12 @@ const db = require('../db');
 const { Op, fn, col } = require('sequelize');
 const { GeneralDao } = require('../dao');
 const logger = require('../common/logger')('general-bao');
+const memoryCache = require('memory-cache');
 const { ERROR_CODES, ERROR_MESSAGES } = require('../common/error.constants');
 const { STATUS_CODES } = require('../common/constants');
 const error = new Error();
+
+const cacheDuration = 2 * 24 * 60 * 60 * 1000;
 
 class GeneralBao extends Base {
   constructor() {
@@ -14,6 +17,13 @@ class GeneralBao extends Base {
   }
 
   async getServiceablePincodes(limit, page) {
+    const cacheKey = `serviceablePincodes_${limit}_${page}`;
+
+    const cachedData = memoryCache.get(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+
     let txn = await db.sequelize.transaction();
     logger.info('inside getServiceablePincodes');
     try {
@@ -27,6 +37,9 @@ class GeneralBao extends Base {
         offset,
         txn
       );
+
+      memoryCache.put(cacheKey, data, cacheDuration);
+
       await txn.commit();
       return data;
     } catch (error) {
@@ -52,6 +65,13 @@ class GeneralBao extends Base {
   }
 
   async getDiagnosticTests(limit, page) {
+    const cacheKey = `diagnosticTests_${limit}_${page}`;
+
+    const cachedData = memoryCache.get(cacheKey);
+    if (cachedData) {
+      return cachedData;
+    }
+
     let txn = await db.sequelize.transaction();
     logger.info('inside getDiagnosticTests');
     try {
@@ -73,6 +93,8 @@ class GeneralBao extends Base {
         attributeValue: item.attributeValue,
         attributeName: item['diagnosticsTestAttribute.attributeName'],
       }));
+
+      memoryCache.put(cacheKey, data, cacheDuration);
 
       await txn.commit();
       return data;
