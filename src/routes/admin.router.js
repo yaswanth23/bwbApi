@@ -28,4 +28,9 @@ router.get('/admin/users/count', [
   AdminController.getTotalUsersCount,
 ]);
 
+router.get('/admin/users/details', [
+  HeaderService.validateApiAuthorization,
+  AdminController.getUsersList,
+]);
+
 module.exports = router;

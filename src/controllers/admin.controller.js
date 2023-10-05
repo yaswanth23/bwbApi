@@ -82,9 +82,27 @@ module.exports.getDoctorsList = async (req, res) => {
 
 module.exports.getTotalUsersCount = async (req, res) => {
   try {
-    logger.info('inside getDoctorsList controller');
+    logger.info('inside getTotalUsersCount controller');
     const adminBao = new AdminBao();
     const result = await adminBao.getTotalUsersCount();
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
+module.exports.getUsersList = async (req, res) => {
+  try {
+    logger.info('inside getUsersList controller');
+    const schemaVerifyData = Joi.object().keys({
+      userType: Joi.string().valid('doctor', 'partner', 'pharmacy').required(),
+      page: Joi.number().optional(),
+      limit: Joi.number().optional(),
+    });
+    const params = await validateSchema(req.query, schemaVerifyData);
+    const { limit = 10, page = 1 } = req.query;
+    const adminBao = new AdminBao();
+    const result = await adminBao.getUsersList(params, limit, page);
     return _200(res, result);
   } catch (e) {
     throw _sendGenericError(res, e);

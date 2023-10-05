@@ -111,3 +111,45 @@ module.exports.getPartnerUsersCount = async (whereObj, session) => {
     throw error;
   }
 };
+
+module.exports.getAllPharmacyUserDetails = async (
+  whereObj,
+  limit,
+  offset,
+  session
+) => {
+  try {
+    const data = await PharmacyUserDetails.find(whereObj)
+      .sort({ createdOn: -1 })
+      .skip(Number(offset))
+      .limit(Number(limit))
+      .lean(true)
+      .session(session)
+      .exec();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.getAllPartnerUserDetails = async (
+  whereObj,
+  limit,
+  offset,
+  session
+) => {
+  try {
+    const data = await AdminUserDetails.find(whereObj)
+      .sort({ createdOn: -1 })
+      .skip(Number(offset))
+      .limit(Number(limit))
+      .lean(true)
+      .session(session)
+      .exec();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

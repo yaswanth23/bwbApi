@@ -315,11 +315,63 @@ class AdminBao extends Base {
         session
       );
 
+      await session.commitTransaction();
+      session.endSession();
       return {
         successCode: STATUS_CODES.STATUS_CODE_200,
         pharmacyUsersCount: totalPharmacyUsersCount,
         partnerUsersCount: totalPartnersCount,
         doctorUsersCount: totalDoctorsCount,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
+
+  async getUsersList(params, limit, page) {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getUsersList bao');
+      session.startTransaction();
+
+      let offset = (page - 1) * limit;
+      let data = {};
+      let whereObj = {};
+
+      if (params.userType === 'doctor') {
+        data = await AdminDao.getAllDoctorUserDetails(
+          whereObj,
+          limit,
+          offset,
+          session
+        );
+      } else if (params.userType === 'pharmacy') {
+        data = await AdminDao.getAllPharmacyUserDetails(
+          whereObj,
+          limit,
+          offset,
+          session
+        );
+      } else if (params.userType === 'partner') {
+        whereObj = {
+          roleId: 101,
+        };
+        data = await AdminDao.getAllPartnerUserDetails(
+          whereObj,
+          limit,
+          offset,
+          session
+        );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        data: data,
       };
     } catch (e) {
       logger.error(e);
