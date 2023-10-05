@@ -80,6 +80,17 @@ module.exports.getDoctorsList = async (req, res) => {
   }
 };
 
+module.exports.getTotalUsersCount = async (req, res) => {
+  try {
+    logger.info('inside getDoctorsList controller');
+    const adminBao = new AdminBao();
+    const result = await adminBao.getTotalUsersCount();
+    return _200(res, result);
+  } catch (e) {
+    throw _sendGenericError(res, e);
+  }
+};
+
 function _sendGenericError(res, e) {
   return _error(res, {
     message: e,

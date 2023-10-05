@@ -290,6 +290,44 @@ class AdminBao extends Base {
       throw e;
     }
   }
+
+  async getTotalUsersCount() {
+    const session = await mongoose.startSession();
+    try {
+      logger.info('inside getTotalUsersCount bao');
+      session.startTransaction();
+      let whereObj = {};
+      let totalDoctorsCount = await AdminDao.getDoctorUsersCount(
+        whereObj,
+        session
+      );
+
+      let totalPharmacyUsersCount = await AdminDao.getPharmacyUsersCount(
+        whereObj,
+        session
+      );
+
+      whereObj = {
+        roleId: 101,
+      };
+      let totalPartnersCount = await AdminDao.getPartnerUsersCount(
+        whereObj,
+        session
+      );
+
+      return {
+        successCode: STATUS_CODES.STATUS_CODE_200,
+        pharmacyUsersCount: totalPharmacyUsersCount,
+        partnerUsersCount: totalPartnersCount,
+        doctorUsersCount: totalDoctorsCount,
+      };
+    } catch (e) {
+      logger.error(e);
+      await session.abortTransaction();
+      session.endSession();
+      throw e;
+    }
+  }
 }
 
 function generateSalt() {

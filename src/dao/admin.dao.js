@@ -2,6 +2,7 @@ const {
   UserRoles,
   AdminUserDetails,
   DoctorUserDetails,
+  PharmacyUserDetails,
 } = require('../db/collections');
 
 module.exports.findUserRoles = async (whereObj, session) => {
@@ -81,6 +82,28 @@ module.exports.getAllDoctorUserDetails = async (
 module.exports.getDoctorUsersCount = async (whereObj, session) => {
   try {
     const count = await DoctorUserDetails.countDocuments(whereObj)
+      .session(session)
+      .exec();
+    return count;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.getPharmacyUsersCount = async (whereObj, session) => {
+  try {
+    const count = await PharmacyUserDetails.countDocuments(whereObj)
+      .session(session)
+      .exec();
+    return count;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports.getPartnerUsersCount = async (whereObj, session) => {
+  try {
+    const count = await AdminUserDetails.countDocuments(whereObj)
       .session(session)
       .exec();
     return count;
