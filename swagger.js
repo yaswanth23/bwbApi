@@ -13,7 +13,7 @@ const options = {
     basePath: '',
     servers: [
       {
-        url: 'http://localhost:9100/api',
+        url: 'http://localhost:9100',
         description: 'url to connect at localhost',
       },
       {

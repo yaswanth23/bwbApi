@@ -2,10 +2,10 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const colors = require('colors/safe');
 const http = require('http');
 const app = require('../src/app');
-// const connectDB = require("../src/db/dbConnection");
+const db = require('../src/db');
 
 (async () => {
-  //   await connectDB();
+  await db.ping();
   http.createServer(app).listen(process.env.APP_PORT, () => {
     const url = `http://localhost:${process.env.APP_PORT}`;
     console.log(`webserver listening on ${url}`);

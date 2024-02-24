@@ -1,5 +1,4 @@
 const httpContext = require("express-http-context");
-const logger = require("./logger")("http-helper");
 const { v4: UUID } = require("uuid");
 const APP_ENV = process.env.APP_ENV;
 

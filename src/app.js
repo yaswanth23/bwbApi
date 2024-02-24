@@ -13,6 +13,7 @@ const {
 const logger = require('./common/logger')('app');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('../swagger');
+const cookieParser = require('cookie-parser');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -25,6 +26,7 @@ app.use(
 );
 app.use(cors());
 app.use(express.json({ limit: '10mb', type: ['text/*', '*/json'] }));
+app.use(cookieParser());
 app.use(express.urlencoded({ limit: '10mb', extended: false }));
 app.use(_httpContext);
 app.use(_httpResponseInterceptor);
